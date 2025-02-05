@@ -7,5 +7,7 @@
         public int Score { get; set; }
 
         public required Student Student { get; set; }
+
+
     }
 }
