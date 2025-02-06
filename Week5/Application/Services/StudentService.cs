@@ -3,6 +3,9 @@ using Week5.Domain;
 using Week5.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Week5.Application.DTOs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 
 namespace Week5.Application.Services
@@ -30,31 +33,64 @@ namespace Week5.Application.Services
                     ProfessorName = s.Professor.ProfessorName,
                     MajorID = s.MajorID,
                     MajorName = s.Major.MajorName,
-                    Scores = s.BehaviorScore.Select(bs => bs.Score).ToList()
                 })
                 .ToListAsync();
         }
 
-        public async Task<Student?> GetStudentByIdAsync(int studentId)
+        public async Task<StudentDetailsDTO> GetStudentByIdAsync(int studentId)
         {
-            return await _context.Student
+            var s = await _context.Student
                 .Include(s => s.Professor)
                 .Include(s => s.Major)
-                .Include(s => s.StudentClass)
                 .Include(s => s.BehaviorScore)
                 .FirstOrDefaultAsync(s => s.StudentID == studentId);
+
+            if (s == null)
+            {
+                throw new KeyNotFoundException("ไม่มีข้อมูล");
+            }
+
+            return new StudentDetailsDTO
+            {
+                StudentID = s.StudentID,
+                StudentName = s.StudentName,
+                StudentSurname = s.StudentSurname,
+                ProfessorName = s.Professor.ProfessorName,
+                MajorID = s.MajorID,
+                MajorName = s.Major.MajorName,
+                Scores = s.BehaviorScore.Select(bs => bs.Score).ToList()
+            };
         }
 
-        public async Task<Student?> AddStudentAsync(Student student)
+        public async Task<Student> AddStudentAsync(StudentCreateDTO studentCreateDto)
         {
-            var existingStudent = await _context.Student
-                .FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
-            if (existingStudent != null) { 
-                return null; // ถ้าพบข้อมูล student ซ้ำ
+            var professor = await _context.Professor
+                .FirstOrDefaultAsync(p => p.ProfessorID == studentCreateDto.ProfessorID);
+            var major = await _context.Major
+                .FirstOrDefaultAsync(m => m.MajorID == studentCreateDto.MajorID);
+
+            if (professor == null || major == null)
+            {
+                throw new Exception("Professor or Major not found.");
             }
-            
+
+            var student = new Student
+            {
+                StudentName = studentCreateDto.StudentName,
+                StudentSurname = studentCreateDto.StudentSurname,
+                ProfessorID = studentCreateDto.ProfessorID,
+                MajorID = studentCreateDto.MajorID,
+                Professor = professor,
+                Major = major,
+                StudentClass = new List<StudentClass>(),
+                BehaviorScore = new List<BehaviorScore>()
+            };
+
+
             _context.Student.Add(student);
+
             await _context.SaveChangesAsync();
+
             return student;
         }
 

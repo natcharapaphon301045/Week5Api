@@ -14,5 +14,6 @@
 
         public required ICollection<StudentClass> StudentClass { get; set; }
         public required ICollection<BehaviorScore> BehaviorScore { get; set; }
+
     }
 }

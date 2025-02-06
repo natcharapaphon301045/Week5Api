@@ -6,8 +6,8 @@ namespace Week5.Application.Interfaces
     public interface IStudentService
     {
         Task<IEnumerable<StudentDetailsDTO>> GetAllStudentsAsync();
-        Task<Student?> GetStudentByIdAsync(int studentId);
-        Task<Student?> AddStudentAsync(Student student);
+        Task<StudentDetailsDTO> GetStudentByIdAsync(int studentId);
+        Task<Student> AddStudentAsync(StudentCreateDTO studentCreateDto);
         Task<Student?> UpdateStudentAsync(int studentId, Student updatedStudent);
         Task<bool> DeleteStudentAsync(int studentId);
     }

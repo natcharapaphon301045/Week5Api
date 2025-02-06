@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.EntityFrameworkCore;
 using Week5.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Week5.Application.DTOs;
 using Week5.Domain;
+
 
 namespace Week5.Controllers
 {
@@ -32,19 +35,41 @@ namespace Week5.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStudent([FromBody] Student student)
+        public async Task<IActionResult> AddStudent([FromBody] StudentCreateDTO studentCreateDto)
         {
-            var newStudent = await _studentService.AddStudentAsync(student);
-            if (newStudent == null) return BadRequest("Student already exists.");
-            return CreatedAtAction(nameof(GetStudentById), new { id = newStudent.StudentID }, newStudent);
+            try
+            {
+                var student = await _studentService.AddStudentAsync(studentCreateDto);
+                return CreatedAtAction(nameof(GetStudentById), new { id = student.StudentID }, student);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);  // ส่งข้อความผิดพลาดถ้าไม่พบ Professor หรือ Major
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] Student updateStudent)
         {
-            var student = await _studentService.UpdateStudentAsync(id, updateStudent);
-            if (student == null) return NotFound();
-            return Ok(student);
+            if (id != updateStudent.StudentID)
+            {
+                return BadRequest();
+            }
+
+            var student = await _studentService.GetStudentByIdAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            student.StudentName = updateStudent.StudentName;
+            student.StudentSurname = updateStudent.StudentSurname;
+            student.ProfessorID = updateStudent.ProfessorID;
+            student.MajorID = updateStudent.MajorID;
+
+            await _studentService.UpdateStudentAsync(id, updateStudent);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
