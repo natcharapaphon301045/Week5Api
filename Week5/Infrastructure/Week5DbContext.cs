@@ -13,7 +13,7 @@ namespace Week5.Infrastructure
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Class> Class { get; set; }
         public DbSet<BehaviorScore> BehaviorScore { get; set; }
-        public DbSet<Major> Majors { get; set; }
+        public DbSet<Major> Major { get; set; }
         public DbSet<StudentClass> StudentClass { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
