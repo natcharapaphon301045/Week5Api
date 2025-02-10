@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Week5.Application.DTOs;
 using Week5.Domain;
 
-
 namespace Week5.Controllers
 {
     [Route("api/[controller]")]
@@ -25,7 +24,6 @@ namespace Week5.Controllers
             return Ok(students);
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
@@ -44,14 +42,14 @@ namespace Week5.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);  // ส่งข้อความผิดพลาดถ้าไม่พบ Professor หรือ Major
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, [FromBody] Student updateStudent)
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentUpdateDTO updateStudentDto)
         {
-            if (id != updateStudent.StudentID)
+            if (id != updateStudentDto.StudentID)
             {
                 return BadRequest();
             }
@@ -62,22 +60,21 @@ namespace Week5.Controllers
                 return NotFound();
             }
 
-            student.StudentName = updateStudent.StudentName;
-            student.StudentSurname = updateStudent.StudentSurname;
-            student.ProfessorID = updateStudent.ProfessorID;
-            student.MajorID = updateStudent.MajorID;
-
-            await _studentService.UpdateStudentAsync(id, updateStudent);
+            await _studentService.UpdateStudentAsync(id, updateStudentDto);
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var result = await _studentService.DeleteStudentAsync(id);
-            if (!result) return NotFound();
-            
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     }

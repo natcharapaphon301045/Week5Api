@@ -5,7 +5,6 @@
         public int ProfessorID { get; set; }
         public required string ProfessorName { get; set; }
         public required string ProfessorSurname { get; set; }
-
-        public ICollection<StudentClass> Student { get; set; } = new List<StudentClass>();
+        public ICollection<Student> Student { get; set; } = new List<Student>();
     }
 }

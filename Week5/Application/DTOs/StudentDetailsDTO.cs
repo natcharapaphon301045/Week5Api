@@ -12,7 +12,7 @@
         public int MajorID { get; set; }
         public string MajorName { get; set; } = string.Empty;
 
-        public List<int>? Scores { get; set; } // คะแนนจาก BehaviorScore
+        public List<int>? Scores { get; set; }
     }
 
 }

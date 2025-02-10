@@ -8,7 +8,6 @@ namespace Week5.Infrastructure
     {
         public Week5DbContext(DbContextOptions<Week5DbContext> options) : base(options) { }
 
-        // กำหนด DbSet สำหรับตารางที่คุณมี เช่น
         public DbSet<Student> Student { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Class> Class { get; set; }
@@ -33,14 +32,29 @@ namespace Week5.Infrastructure
                 .WithMany(c => c.StudentClass)
                 .HasForeignKey(sc => sc.ClassID);
 
-            // กำหนดให้ ScoreID เป็น Primary Key
             modelBuilder.Entity<BehaviorScore>()
-                .HasKey(b => b.ScoreID);  // กำหนด ScoreID เป็น Primary Key
+                .HasKey(b => b.ScoreID);  
 
             modelBuilder.Entity<BehaviorScore>()
                 .HasOne(b => b.Student)
                 .WithMany(s => s.BehaviorScore)
                 .HasForeignKey(b => b.StudentID);
+
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.Major)
+                .WithMany(m => m.Students)
+                .HasForeignKey(s => s.MajorID);
+
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.Professor)
+                .WithMany(p => p.Student)
+                .HasForeignKey(s => s.ProfessorID);
+
+            modelBuilder.Entity<Student>()
+            .HasMany(s => s.BehaviorScore)
+            .WithOne(bs => bs.Student)
+            .HasForeignKey(bs => bs.StudentID)
+            .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

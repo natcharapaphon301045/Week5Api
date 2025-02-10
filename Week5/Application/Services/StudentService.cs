@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-
 namespace Week5.Application.Services
 {
     public class StudentService : IStudentService
@@ -94,28 +93,49 @@ namespace Week5.Application.Services
             return student;
         }
 
-        public async Task<Student?> UpdateStudentAsync(int studentId, Student updatedStudent)
+        public async Task<Student?> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent)
         {
-            var student = await _context.Student.FirstOrDefaultAsync(s => s.StudentID == studentId);
+            var student = await _context.Student
+                .Include(s => s.StudentClass)
+                .Include(s => s.BehaviorScore)
+                .FirstOrDefaultAsync(s => s.StudentID == studentId);
 
-            if (student == null) return null; // ถ้าไม่พบข้อมูล student
+            if (student == null) return null;
 
-            // อัพเดตข้อมูลที่ต้องการ
             student.StudentName = updatedStudent.StudentName;
             student.StudentSurname = updatedStudent.StudentSurname;
             student.ProfessorID = updatedStudent.ProfessorID;
             student.MajorID = updatedStudent.MajorID;
 
+            if (updatedStudent.BehaviorScore != null)
+            {
+                student.BehaviorScore.Clear();
+                foreach (var score in updatedStudent.BehaviorScore)
+                {
+                    student.BehaviorScore.Add(new BehaviorScore
+                    {
+                        ScoreID = score.ScoreID,
+                        StudentID = student.StudentID,
+                        Score = score.Score,
+                        Student = student
+                    });
+                }
+            }
+
             await _context.SaveChangesAsync();
             return student;
         }
 
+
         public async Task<bool> DeleteStudentAsync(int studentId)
         {
-            var student = await _context.Student.FirstOrDefaultAsync(s => s.StudentID == studentId);
+            var student = await _context.Student.Include(s => s.BehaviorScore).FirstOrDefaultAsync(s => s.StudentID == studentId);
+            if (student == null)
+            {
+                return false;
+            }
 
-            if (student == null) return false; // ถ้าไม่พบข้อมูล student
-
+            _context.BehaviorScore.RemoveRange(student.BehaviorScore);
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
             return true;

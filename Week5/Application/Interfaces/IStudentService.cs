@@ -8,7 +8,7 @@ namespace Week5.Application.Interfaces
         Task<IEnumerable<StudentDetailsDTO>> GetAllStudentsAsync();
         Task<StudentDetailsDTO> GetStudentByIdAsync(int studentId);
         Task<Student> AddStudentAsync(StudentCreateDTO studentCreateDto);
-        Task<Student?> UpdateStudentAsync(int studentId, Student updatedStudent);
+        Task<Student?> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent);
         Task<bool> DeleteStudentAsync(int studentId);
     }
 }
