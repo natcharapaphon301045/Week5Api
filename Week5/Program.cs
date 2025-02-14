@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Week5.Application.Interfaces;
 using Week5.Infrastructure;
-using Week5.Application.Service;
+using Week5.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

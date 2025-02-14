@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Week5.Domain;
+using Week5.Domain.Entity;
 
 namespace Week5.Infrastructure
 {

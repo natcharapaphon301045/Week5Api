@@ -1,51 +1,113 @@
 ﻿using Week5.Application.DTOs;
 using Week5.Application.Interfaces;
-using Week5.Domain;
-using Week5.Infrastructure;
+using Week5.Domain.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using Week5.Infrastructure.Repositories;
+using Week5.Application.Constants;
 
-namespace Week5.Application.Service { 
+namespace Week5.Application.Services
+{
     public class StudentService : IStudentService
     {
         private readonly IRepository<Student> _studentRepository;
+        private readonly IRepository<Professor> _professorRepository;
+        private readonly IRepository<Major> _majorRepository;
 
-        public StudentService(IRepository<Student> studentRepository)
+        public StudentService(IRepository<Student> studentRepository, IRepository<Professor> professorRepository, IRepository<Major> majorRepository)
         {
             _studentRepository = studentRepository;
+            _professorRepository = professorRepository;
+            _majorRepository = majorRepository;
         }
 
-        public async Task<IEnumerable<StudentDetailsDTO>> GetAllStudentsAsync()
+        public async Task<ApiResponse<IEnumerable<StudentDetailsDTO>>> GetAllStudentsAsync()
         {
             var students = await _studentRepository.GetAllWithIncludeAsync(
                 s => s.Professor,
                 s => s.Major,
                 s => s.BehaviorScore);
-
-            return students.Select(s => new StudentDetailsDTO
-            {
-                StudentID = s.StudentID,
-                StudentName = s.StudentName,
-                StudentSurname = s.StudentSurname,
-                ProfessorID = s.ProfessorID,
-                ProfessorName = s.Professor.ProfessorName,
-                MajorID = s.MajorID,
-                MajorName = s.Major.MajorName,
-                Scores = s.BehaviorScore.Select(b => b.Score).ToList()
-            }).ToList();
+            var studentDetails = students.Select(MapToStudentDetailsDTO).ToList();
+            return new ApiResponse<IEnumerable<StudentDetailsDTO>>(true, ResponseMessages.StudentsRetrievedSuccessfully, studentDetails);
         }
 
-        public async Task<StudentDetailsDTO> GetStudentByIdAsync(int studentId)
+        public async Task<ApiResponse<StudentDetailsDTO?>> GetStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.GetByIdWithIncludeAsync(studentId,
                 s => s.Professor,
                 s => s.Major,
                 s => s.BehaviorScore);
+            if (student == null)
+            {
+                return new ApiResponse<StudentDetailsDTO?>(false, ResponseMessages.StudentNotFound);
+            }
+            var studentDetails = MapToStudentDetailsDTO(student);
+            return new ApiResponse<StudentDetailsDTO?>(true, ResponseMessages.StudentsRetrievedSuccessfully, studentDetails);
+        }
 
-            if (student == null) return null;
+        public async Task<ApiResponse<Student>> AddStudentAsync(StudentCreateDTO studentCreateDto)
+        {
+            var professor = await _professorRepository.GetByIdWithIncludeAsync(studentCreateDto.ProfessorID);
+            var major = await _majorRepository.GetByIdWithIncludeAsync(studentCreateDto.MajorID);
 
+            if (professor == null || major == null)
+            {
+                return new ApiResponse<Student>(false, ResponseMessages.InvalidProfessorOrMajorID);
+            }
+
+            var student = new Student
+            {
+                StudentName = studentCreateDto.StudentName,
+                StudentSurname = studentCreateDto.StudentSurname,
+                ProfessorID = studentCreateDto.ProfessorID,
+                MajorID = studentCreateDto.MajorID,
+                Professor = professor,
+                Major = major,
+                StudentClass = new List<StudentClass>(),
+                BehaviorScore = new List<BehaviorScore>()
+            };
+
+            await _studentRepository.AddAsync(student);
+            return new ApiResponse<Student>(true, ResponseMessages.StudentAddedSuccessfully, student);
+        }
+
+        public async Task<ApiResponse<Student?>> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent)
+        {
+            var student = await _studentRepository.GetByIdWithIncludeAsync(studentId,
+                s => s.Professor,
+                s => s.Major,
+                s => s.BehaviorScore);
+            if (student == null)
+            {
+                return new ApiResponse<Student?>(false, ResponseMessages.StudentNotFound);
+            }
+
+            student.StudentName = updatedStudent.StudentName;
+            student.StudentSurname = updatedStudent.StudentSurname;
+            student.ProfessorID = updatedStudent.ProfessorID;
+            student.MajorID = updatedStudent.MajorID;
+
+            await _studentRepository.UpdateAsync(student);
+            return new ApiResponse<Student?>(true, ResponseMessages.StudentUpdatedSuccessfully, student);
+        }
+
+        public async Task<ApiResponse<bool>> DeleteStudentAsync(int studentId)
+        {
+            var student = await _studentRepository.GetByIdWithIncludeAsync(studentId,
+                s => s.BehaviorScore);
+
+            if (student == null)
+            {
+                return new ApiResponse<bool>(false, ResponseMessages.StudentNotFound);
+            }
+
+            await _studentRepository.DeleteAsync(student);
+            return new ApiResponse<bool>(true, ResponseMessages.StudentDeletedSuccessfully);
+        }
+
+        private static StudentDetailsDTO MapToStudentDetailsDTO(Student student)
+        {
             return new StudentDetailsDTO
             {
                 StudentID = student.StudentID,
@@ -57,62 +119,6 @@ namespace Week5.Application.Service {
                 MajorName = student.Major.MajorName,
                 Scores = student.BehaviorScore.Select(b => b.Score).ToList()
             };
-        }
-
-        public async Task<Student> AddStudentAsync(StudentCreateDTO studentCreateDto)
-        {
-            var student = new Student
-            {
-                StudentName = studentCreateDto.StudentName,
-                StudentSurname = studentCreateDto.StudentSurname,
-                ProfessorID = studentCreateDto.ProfessorID,
-                MajorID = studentCreateDto.MajorID,
-                Professor = new Professor
-                {
-                    ProfessorID = studentCreateDto.ProfessorID,
-                    ProfessorName = "DefaultName", // Added this line
-                    ProfessorSurname = "DefaultSurname" // Added this line
-                },
-                Major = new Major
-                {
-                    MajorID = studentCreateDto.MajorID,
-                    MajorName = "DefaultMajorName" // Added this line
-                },
-                StudentClass = new List<StudentClass>(),
-                BehaviorScore = new List<BehaviorScore>()
-            };
-
-            await _studentRepository.AddAsync(student);
-            return student;
-        }
-
-        public async Task<Student?> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent)
-        {
-            var student = await _studentRepository.GetByIdWithIncludeAsync(studentId,
-                s => s.Professor,
-                s => s.Major,
-                s => s.BehaviorScore);
-
-            if (student == null) return null;
-
-            student.StudentName = updatedStudent.StudentName;
-            student.StudentSurname = updatedStudent.StudentSurname;
-            student.ProfessorID = updatedStudent.ProfessorID;
-            student.MajorID = updatedStudent.MajorID;
-
-            await _studentRepository.UpdateAsync(student);
-            return student;
-        }
-
-        public async Task<bool> DeleteStudentAsync(int studentId)
-        {
-            var student = await _studentRepository.GetByIdWithIncludeAsync(studentId,
-                s => s.BehaviorScore);
-
-            if (student == null) return false;
-
-            await _studentRepository.DeleteAsync(student);
-            return true;
         }
     }
 }

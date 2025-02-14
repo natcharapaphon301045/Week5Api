@@ -1,14 +1,14 @@
 ﻿using Week5.Application.DTOs;
-using Week5.Domain;
+using Week5.Domain.Entity;
 
 namespace Week5.Application.Interfaces
 {
     public interface IStudentService
     {
-        Task<IEnumerable<StudentDetailsDTO>> GetAllStudentsAsync();
-        Task<StudentDetailsDTO> GetStudentByIdAsync(int studentId);
-        Task<Student> AddStudentAsync(StudentCreateDTO studentCreateDto);
-        Task<Student?> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent);
-        Task<bool> DeleteStudentAsync(int studentId);
+        Task<ApiResponse<IEnumerable<StudentDetailsDTO>>> GetAllStudentsAsync();
+        Task<ApiResponse<StudentDetailsDTO?>> GetStudentByIdAsync(int studentId);
+        Task<ApiResponse<Student>> AddStudentAsync(StudentCreateDTO studentCreateDto);
+        Task<ApiResponse<Student?>> UpdateStudentAsync(int studentId, StudentUpdateDTO updatedStudent);
+        Task<ApiResponse<bool>> DeleteStudentAsync(int studentId);
     }
 }

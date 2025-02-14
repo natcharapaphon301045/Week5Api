@@ -1,4 +1,4 @@
-﻿namespace Week5.Domain
+﻿namespace Week5.Domain.Entity
 {
     public class Class
     {
