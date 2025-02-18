@@ -4,7 +4,6 @@ using Week5.Domain.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Week5.Infrastructure.Repositories;
 using Week5.Application.Constants;
 
 namespace Week5.Application.Services

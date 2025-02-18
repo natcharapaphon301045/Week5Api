@@ -32,8 +32,10 @@ namespace Week5.Adapters.Controllers
         }
 
         [HttpPost]
+        /*
         public async Task<IActionResult> AddStudent([FromBody] StudentCreateDTO studentCreateDto)
         {
+
             if (studentCreateDto == null)
             {
                 return BadRequest("Student data is null.");
@@ -53,7 +55,7 @@ namespace Week5.Adapters.Controllers
 
             return CreatedAtAction(nameof(GetStudentById), new { id = student.StudentID }, "Create successfully");
         }
-
+        */
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentUpdateDTO updateStudentDto)
         {
@@ -69,7 +71,7 @@ namespace Week5.Adapters.Controllers
 
             return NoContent();
         }
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
