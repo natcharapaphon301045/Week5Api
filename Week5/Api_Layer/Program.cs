@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Week5.Application.Interfaces;
-using Week5.Infrastructure;
 using Week5.Application.Services;
-using Week5.Infrastructure.Repositories;
+using Week5.Infrastructure.Persistence;
+using Week5.trash;
 
 var builder = WebApplication.CreateBuilder(args);
 

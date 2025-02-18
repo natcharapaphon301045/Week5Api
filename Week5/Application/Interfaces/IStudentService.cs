@@ -1,6 +1,6 @@
 ﻿using Week5.Application.Constants;
-using Week5.Application.DTOs;
 using Week5.Domain.Entity;
+using Week5.trash;
 
 namespace Week5.Application.Interfaces
 {

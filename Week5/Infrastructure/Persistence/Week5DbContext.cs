@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Week5.Domain.Entity;
 
-namespace Week5.Infrastructure
+namespace Week5.Infrastructure.Persistence
 {
     public class Week5DbContext : DbContext
     {
@@ -33,7 +33,7 @@ namespace Week5.Infrastructure
                 .HasForeignKey(sc => sc.ClassID);
 
             modelBuilder.Entity<BehaviorScore>()
-                .HasKey(b => b.ScoreID);  
+                .HasKey(b => b.ScoreID);
 
             modelBuilder.Entity<BehaviorScore>()
                 .HasOne(b => b.Student)

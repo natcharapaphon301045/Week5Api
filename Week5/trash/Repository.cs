@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Week5.Infrastructure;
+using Week5.Infrastructure.Persistence;
 
-namespace Week5.Infrastructure.Repositories
+namespace Week5.trash
 {
     public class Repository<T> : IRepository<T> where T : class
     {

@@ -1,4 +1,4 @@
-﻿namespace Week5.Application.DTOs
+﻿namespace Week5.trash
 {
     public class StudentDetailsDTO
     {
