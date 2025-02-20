@@ -5,8 +5,8 @@ using Week5.Domain;
 
 namespace Week5.Api_Layer.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
@@ -31,19 +31,12 @@ namespace Week5.Api_Layer.Controllers
             return Ok(student);
         }
 
-        [HttpPost]
-
-        [HttpPut("{id}")]
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        [HttpPost("initialize")]
+        public async Task<IActionResult> InitializeStudentData()
         {
-            var result = await _studentService.DeleteStudentAsync(id);
-            if (!result.Success)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            var result = await _studentService.InitializeStudentDataAsync();
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(result.Message);
         }
     }
 }

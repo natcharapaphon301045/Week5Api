@@ -6,7 +6,14 @@ namespace Week5.Infrastructure.Persistence
 {
     public class Week5DbContext : DbContext
     {
-        public Week5DbContext(DbContextOptions<Week5DbContext> options) : base(options) { }
+        public Week5DbContext(DbContextOptions<Week5DbContext> options) : base(options) 
+        {
+            if (Database.GetConnectionString() == null)
+            {
+                throw new InvalidOperationException("❌ Connection String is not set in Week5DbContext.");
+            }
+            Console.WriteLine($"✅ Week5DbContext Connected: {Database.GetConnectionString()}");
+        }
 
         public DbSet<Student> Student { get; set; }
         public DbSet<Professor> Professor { get; set; }
