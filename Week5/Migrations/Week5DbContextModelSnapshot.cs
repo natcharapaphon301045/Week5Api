@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Week5.Infrastructure_Layer.Persistence
+namespace Week5.Infrastructure
 {
     [DbContext(typeof(Week5DbContext))]
     partial class Week5DbContextModelSnapshot : ModelSnapshot

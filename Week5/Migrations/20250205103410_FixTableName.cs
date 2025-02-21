@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Week5.Infrastructure_Layer.Persistence;
+using Week5.Infrastructure;
 namespace Week5.Migrations
 {
     /// <inheritdoc />

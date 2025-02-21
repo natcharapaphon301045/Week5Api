@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Week5.Domain_Layer.Entity;
 
-namespace Infrastructure_Layer.Persistence
+namespace Week5.Infrastructure
 {
     public class Week5DbContext : DbContext
     {
