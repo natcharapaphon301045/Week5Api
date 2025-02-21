@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using Week5.Domain_Layer.Entity;
 
 namespace Week5.Infrastructure_Layer.Presistence

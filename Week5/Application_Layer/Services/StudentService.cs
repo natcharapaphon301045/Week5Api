@@ -1,11 +1,7 @@
 ﻿using Week5.Application_Layer.Interfaces;
 using Week5.Domain_Layer.IRepositories;
 using Week5.Application_Layer.DTOs;
-using Week5.Infrastructure_Layer.Presistence;
-using Week5.Domain_Layer.Entity;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Week5.Application_Layer.Services
 {

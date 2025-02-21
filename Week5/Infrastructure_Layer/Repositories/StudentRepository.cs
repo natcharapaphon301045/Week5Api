@@ -2,8 +2,6 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Presistence;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Week5.Infrastructure_Layer.Repositories
 {
