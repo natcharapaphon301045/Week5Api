@@ -1,20 +1,15 @@
-﻿using Week5.Application.Interfaces;
+﻿using Week5.Application_Layer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Week5.Application.DTOs;
-using Week5.Domain;
+using Week5.Application_Layer.DTOs;
+using Week5.Domain_Layer;
 
 namespace Week5.Api_Layer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController : ControllerBase
+    public class StudentController(IStudentService studentService) : ControllerBase
     {
-        private readonly IStudentService _studentService;
-
-        public StudentController(IStudentService studentService)
-        {
-            _studentService = studentService;
-        }
+        private readonly IStudentService _studentService = studentService;
 
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
@@ -40,4 +35,3 @@ namespace Week5.Api_Layer.Controllers
         }
     }
 }
-

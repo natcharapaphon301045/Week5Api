@@ -1,4 +1,4 @@
-﻿namespace Week5.Application.Constants
+﻿namespace Week5.Application_Layer.Services
 {
     public static class ResponseMessages
     {

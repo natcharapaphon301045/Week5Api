@@ -1,21 +1,14 @@
-﻿using Week5.Domain.Entity;
-using Week5.Domain.IRepositories;
-using Week5.Infrastructure.Persistence;
+﻿using Week5.Domain_Layer.Entity;
+using Week5.Domain_Layer.IRepositories;
+using Week5.Infrastructure_Layer.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Week5.Infrastructure.Repositories
+namespace Week5.Infrastructure_Layer.Repositories
 {
-    public class StudentRepository : IStudentRepository
+    public class StudentRepository(Week5DbContext _context) : IStudentRepository
     {
-        private readonly Week5DbContext _context;
-
-        public StudentRepository(Week5DbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<IEnumerable<Student>> GetAllAsync()
         {
             return await _context.Student.ToListAsync();

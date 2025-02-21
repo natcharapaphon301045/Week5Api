@@ -1,4 +1,4 @@
-﻿namespace Week5.Application.DTOs
+﻿namespace Week5.Application_Layer.DTOs
 {
     public class StudentDTO
     {

@@ -1,4 +1,4 @@
-﻿namespace Week5.Domain.Entity
+﻿namespace Week5.Domain_Layer.Entity
 {
     public class StudentClass
     {

@@ -1,16 +1,17 @@
-﻿using Week5.Infrastructure.Persistence;
+﻿using Week5.Infrastructure_Layer.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Week5.Application.Interfaces;
-using Week5.Application.Services;
-using Week5.Domain.IRepositories;
-using Week5.Infrastructure.Repositories;
+using Week5.Application_Layer.Interfaces;
+using Week5.Application_Layer.Services;
+using Week5.Domain_Layer.IRepositories;
+using Week5.Infrastructure_Layer.Repositories;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register DbContext
-builder.Configuration.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(),"Api_Layer"))
-                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                     .AddEnvironmentVariables();
+builder.Services.AddDbContext<Week5DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // ตรวจสอบการโหลดค่า
 Console.WriteLine($"✅ Loaded Connection String: {builder.Configuration.GetConnectionString("DefaultConnection")}");
 
