@@ -1,25 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Week5.Domain_Layer.Entity;
 
-namespace Week5.Infrastructure_Layer.Presistence
+namespace Week5.Infrastructure_Layer.Persistence
 {
-    public class Week5DbContext : DbContext
+    public class Week5DbContext(DbContextOptions<Week5DbContext> options, IConfiguration configuration)
+        : DbContext(options)
     {
-        public Week5DbContext(DbContextOptions<Week5DbContext> options) : base(options) 
-        {
-            if (Database.GetConnectionString() == null)
-            {
-                throw new InvalidOperationException("❌ Connection String is not set in Week5DbContext.");
-            }
-            Console.WriteLine($"✅ Week5DbContext Connected: {Database.GetConnectionString()}");
-        }
-
         public DbSet<Student> Student { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Class> Class { get; set; }
         public DbSet<BehaviorScore> BehaviorScore { get; set; }
         public DbSet<Major> Major { get; set; }
         public DbSet<StudentClass> StudentClass { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("❌ Connection String is not set in configuration.");
+                }
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

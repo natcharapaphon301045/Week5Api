@@ -1,7 +1,5 @@
 ﻿using Week5.Application_Layer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Week5.Application_Layer.DTOs;
-using Week5.Domain_Layer;
 
 namespace Week5.Api_Layer.Controllers
 {

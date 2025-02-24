@@ -1,6 +1,6 @@
 ﻿using Week5.Domain_Layer.Entity;
 using Week5.Domain_Layer.IRepositories;
-using Week5.Infrastructure_Layer.Presistence;
+using Week5.Infrastructure_Layer.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Week5.Infrastructure_Layer.Repositories
