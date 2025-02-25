@@ -9,10 +9,11 @@ namespace Week5.Api_Layer.Controllers
     [Route("api/[controller]")]
     public class StudentController: ControllerBase
     {
-        private readonly IStudentGetService _studentGetService;
-        private readonly IStudentPostService _studentPostService;
+        private readonly IStudentService.IStudentGetService _studentGetService;
+        private readonly IStudentService.IStudentPostService _studentPostService;
 
-        public StudentController(IStudentGetService studentGetService, IStudentPostService studentPostService)
+        public StudentController(IStudentService.IStudentGetService studentGetService,
+                                    IStudentService.IStudentPostService studentPostService)
         {
             _studentGetService = studentGetService;
             _studentPostService = studentPostService;
