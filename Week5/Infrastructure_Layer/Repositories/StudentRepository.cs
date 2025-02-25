@@ -5,16 +5,54 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Week5.Infrastructure_Layer.Repositories
 {
-    public class StudentRepository(Week5DbContext _context) : IStudentRepository
+    public class StudentRepository : IStudentRepository
     {
-        public async Task<IEnumerable<Student>> GetAllAsync()
+        private readonly Week5DbContext _context;
+
+        public StudentRepository(Week5DbContext context)
         {
-            return await _context.Student.ToListAsync();
+            _context = context;
         }
 
-        public async Task<Student?> GetByIdAsync(int studentId)
+        public async Task<IEnumerable<Student>> GetAllAsync()
         {
-            return await _context.Student.FindAsync(studentId);
+            return await _context.Student.ToListAsync(); // ให้แน่ใจว่า DbSet ชื่อ "Students"
+        }
+
+        public async Task<Student> GetByIdAsync(int studentId)
+        {
+            var student = await _context.Student.FindAsync(studentId);
+            if (student == null)
+                throw new KeyNotFoundException($"Student with ID {studentId} not found.");
+
+            return student;
+
+        }
+        public async Task<Professor> GetProfessorByIdAsync(int professorId)
+        {
+            return await _context.Professor.FirstOrDefaultAsync(p => p.ProfessorID == professorId);
+        }
+
+        public async Task<Major> GetMajorByIdAsync(int majorId)
+        {
+            return await _context.Major.FirstOrDefaultAsync(m => m.MajorID == majorId);
+        }
+
+
+        public async Task CreateStudentAsync(Student student)
+        {
+            await _context.Student.AddAsync(student);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync() > 0; 
+        }
+
+        public Task<bool> SaveChangeAsync()
+        {
+            throw new NotImplementedException();
         }
     }
+
 }
