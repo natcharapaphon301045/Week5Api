@@ -54,7 +54,7 @@ namespace Week5.Api_Layer.Controllers
                 new { status = "success", message = "Student created" });
         }
 
-
+        /*
         [HttpPost("initialize")]
         public async Task<IActionResult> InitializeStudentData()
             {
@@ -62,6 +62,6 @@ namespace Week5.Api_Layer.Controllers
                 if (!result.Success) return BadRequest(result.Message);
                 return Ok(result.Message);
             }
-        
+        */
     }
 }

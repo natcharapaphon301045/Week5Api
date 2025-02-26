@@ -3,7 +3,7 @@ using Week5.Domain_Layer.Entity;
 
 namespace Week5.Application_Layer.Interfaces
 {
-    public interface IStudentService  
+    public interface IStudentService
     {
         public interface GetService
         {
@@ -11,12 +11,11 @@ namespace Week5.Application_Layer.Interfaces
             Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId);
             Task<ApiResponse<Professor>> GetProfessorByIdAsync(int professorId);
             Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId);
-        
-
+        }
         public interface PostService
         {
             Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO);
-            Task<ApiResponse<bool>> InitializeStudentDataAsync();
+            /*Task<ApiResponse<bool>> InitializeStudentDataAsync();*/
         }
     }
 }
