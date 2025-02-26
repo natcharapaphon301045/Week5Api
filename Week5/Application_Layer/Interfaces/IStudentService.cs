@@ -5,15 +5,15 @@ namespace Week5.Application_Layer.Interfaces
 {
     public interface IStudentService  
     {
-        public interface IStudentGetService
+        public interface GetService
         {
             Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync();
             Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId);
             Task<ApiResponse<Professor>> GetProfessorByIdAsync(int professorId);
             Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId);
-        }
+        
 
-        public interface IStudentPostService
+        public interface PostService
         {
             Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO);
             Task<ApiResponse<bool>> InitializeStudentDataAsync();

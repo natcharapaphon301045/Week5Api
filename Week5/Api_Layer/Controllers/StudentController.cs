@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Week5.Application_Layer.DTOs;
 using Week5.Domain_Layer.Entity;
+using static Week5.Application_Layer.Interfaces.IStudentService;
 
 namespace Week5.Api_Layer.Controllers
 {
@@ -9,15 +10,15 @@ namespace Week5.Api_Layer.Controllers
     [Route("api/[controller]")]
     public class StudentController: ControllerBase
     {
-        private readonly IStudentService.IStudentGetService _studentGetService;
-        private readonly IStudentService.IStudentPostService _studentPostService;
+        private readonly GetService _studentGetService;
+        private readonly PostService _studentPostService;
 
-        public StudentController(IStudentService.IStudentGetService studentGetService,
-                                    IStudentService.IStudentPostService studentPostService)
+        public StudentController(GetService studentGetService, PostService studentPostService)
         {
             _studentGetService = studentGetService;
             _studentPostService = studentPostService;
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()

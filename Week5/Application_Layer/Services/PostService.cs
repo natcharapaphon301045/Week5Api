@@ -2,10 +2,11 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Application_Layer.DTOs;
 using Week5.Domain_Layer.Entity;
+using Week5.Application_Layer.Services;
 
 namespace Week5.Application_Layer.Services
 {
-    public class PostService : IStudentService
+    public class PostService : IStudentService.PostService
     {
         private readonly IStudentRepository _studentRepository;
 

@@ -2,10 +2,11 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Application_Layer.DTOs;
 using Week5.Domain_Layer.Entity;
+using Week5.Application_Layer.Services;
 
 namespace Week5.Application_Layer.Services
 {
-    public class GetService : IStudentService
+    public class GetService : IStudentService.GetService
     {
         private readonly IStudentRepository _studentRepository;
 
@@ -13,6 +14,8 @@ namespace Week5.Application_Layer.Services
         {
             _studentRepository = studentRepository;
         }
+
+        // แก้ไขให้ชนิดการคืนค่าตรงตามที่กำหนดใน interface
         public async Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync()
         {
             var students = await _studentRepository.GetAllAsync();
@@ -33,6 +36,7 @@ namespace Week5.Application_Layer.Services
             };
         }
 
+        // แก้ไขให้ชนิดการคืนค่าตรงตามที่กำหนดใน interface
         public async Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.GetByIdAsync(studentId);
@@ -63,6 +67,7 @@ namespace Week5.Application_Layer.Services
             };
         }
 
+        // แก้ไขให้ชนิดการคืนค่าตรงตามที่กำหนดใน interface
         public async Task<ApiResponse<Professor>> GetProfessorByIdAsync(int professorId)
         {
             var professor = await _studentRepository.GetProfessorByIdAsync(professorId);
@@ -83,6 +88,7 @@ namespace Week5.Application_Layer.Services
             };
         }
 
+        // แก้ไขให้ชนิดการคืนค่าตรงตามที่กำหนดใน interface
         public async Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId)
         {
             var major = await _studentRepository.GetMajorByIdAsync(majorId);
