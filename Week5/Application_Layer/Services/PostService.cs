@@ -31,16 +31,16 @@ namespace Week5.Application_Layer.Services
 
             var student = new Student
             {
-                StudentName = createDto.StudentName,
-                StudentSurname = createDto.StudentSurname,
-                ProfessorID = (int?)createDto.ProfessorID ?? 1,
-                MajorID = (int?)createDto.MajorID ?? 1,
+                StudentName = StudentDto.StudentName,
+                StudentSurname = StudentDto.StudentSurname,
+                ProfessorID = StudentDto.ProfessorID,
+                MajorID = StudentDto.MajorID,
+                Professor = professor,
+                Major = major,
                 StudentClass = new List<StudentClass>(),
-                BehaviorScore = new List<BehaviorScore>
-        {
-            new BehaviorScore { Score = 100 }
-        }
+                BehaviorScore = new List<BehaviorScore>() 
             };
+
 
             await _studentRepository.CreateStudentAsync(student);
             var result = await _studentRepository.SaveChangeAsync();
@@ -57,8 +57,6 @@ namespace Week5.Application_Layer.Services
                 StudentSurname = student.StudentSurname,
                 ProfessorID = student.ProfessorID,
                 MajorID = student.MajorID,
-                StudentClass = student.StudentClass?.Select(sc => new StudentClassDTO { ClassID = sc.ClassID }).ToList() ?? new List<StudentClassDTO>(),
-                BehaviorScore = student.BehaviorScore?.Select(bs => bs.Score).ToList() ?? new List<int>()
             };
 
             return new ApiResponse<StudentDTO>

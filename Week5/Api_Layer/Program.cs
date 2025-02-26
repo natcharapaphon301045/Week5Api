@@ -12,9 +12,11 @@ builder.Services.AddDbContext<Week5DbContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
-builder.Services.AddScoped<IStudentGetService, GetService>();
-builder.Services.AddScoped<IStudentPostService, PostService>();
 
+builder.Services.AddScoped<IStudentService, GetService>();
+builder.Services.AddScoped<IStudentService, PostService>();
+
+/*IStudentService.IStudentGetService*/
 builder.Services.AddControllers();
 
 var app = builder.Build();

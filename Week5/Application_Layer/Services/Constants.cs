@@ -5,6 +5,11 @@
         public const string StudentGetSuccess = "Students retrieved successfully";
         public const string StudentPostSuccess = "Student created successfully";
         public const string StudentGetNotFound = "Student not found";
+        public const string StudentPostNotFound = "Student not found";
+        public const string ProfessorNotFound = "Professor not found";
+        public const string ProfessorGetSuccess = "Professor Get Success";
+        public const string MajorNotFound = "Major not found";
+        public const string MajorGetSuccess = "Major Get Success";
     }
     public class ApiResponse<T>
     {

@@ -2,7 +2,6 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Application_Layer.DTOs;
 using Week5.Domain_Layer.Entity;
-using static Week5.Application_Layer.Services.GetService;
 
 namespace Week5.Application_Layer.Services
 {
@@ -63,7 +62,45 @@ namespace Week5.Application_Layer.Services
                 Data = studentDTO
             };
         }
-       
-    }
 
+        public async Task<ApiResponse<Professor>> GetProfessorByIdAsync(int professorId)
+        {
+            var professor = await _studentRepository.GetProfessorByIdAsync(professorId);
+            if (professor == null)
+            {
+                return new ApiResponse<Professor>
+                {
+                    Success = false,
+                    Message = ResponseMessages.ProfessorNotFound,
+                    Data = null
+                };
+            }
+            return new ApiResponse<Professor>
+            {
+                Success = true,
+                Message = ResponseMessages.ProfessorGetSuccess,
+                Data = professor
+            };
+        }
+
+        public async Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId)
+        {
+            var major = await _studentRepository.GetMajorByIdAsync(majorId);
+            if (major == null)
+            {
+                return new ApiResponse<Major>
+                {
+                    Success = false,
+                    Message = ResponseMessages.MajorNotFound,
+                    Data = null
+                };
+            }
+            return new ApiResponse<Major>
+            {
+                Success = true,
+                Message = ResponseMessages.MajorGetSuccess,
+                Data = major
+            };
+        }
+    }
 }

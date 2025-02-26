@@ -9,8 +9,8 @@ namespace Week5.Application_Layer.Interfaces
         {
             Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync();
             Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId);
-            Task<Professor?> GetProfessorByIdAsync(int professorId);
-            Task<Major?> GetMajorByIdAsync(int majorId);
+            Task<ApiResponse<Professor>> GetProfessorByIdAsync(int professorId);
+            Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId);
         }
 
         public interface IStudentPostService

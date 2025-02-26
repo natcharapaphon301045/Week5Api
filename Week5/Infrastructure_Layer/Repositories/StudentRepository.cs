@@ -28,12 +28,12 @@ namespace Week5.Infrastructure_Layer.Repositories
             return student;
 
         }
-        public async Task<Professor> GetProfessorByIdAsync(int professorId)
+        public async Task<Professor?> GetProfessorByIdAsync(int professorId)
         {
             return await _context.Professor.FirstOrDefaultAsync(p => p.ProfessorID == professorId);
         }
 
-        public async Task<Major> GetMajorByIdAsync(int majorId)
+        public async Task<Major?> GetMajorByIdAsync(int majorId)
         {
             return await _context.Major.FirstOrDefaultAsync(m => m.MajorID == majorId);
         }
