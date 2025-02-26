@@ -6,12 +6,9 @@
         public string Message { get; set; } = string.Empty;
         public T? Data { get; set; }
 
-        public ApiResponse(bool success, string message, T? data = default)
-        {
-            Success = success;
-            Message = message;
-            Data = data;
-        }
+        public ApiResponse(bool success, string message, T? data = default) => 
+            (Success, Message, Data)=(success, message, data);
+        
 
         public static ApiResponse<T> SuccessResponse(T data, string message = "Success") =>
             new (true, message, data);

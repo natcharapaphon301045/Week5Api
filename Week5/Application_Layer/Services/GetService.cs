@@ -10,10 +10,8 @@ namespace Week5.Application_Layer.Services
     {
         private readonly IStudentRepository _studentRepository;
 
-        public GetService(IStudentRepository studentRepository)
-        {
+        public GetService(IStudentRepository studentRepository) =>
             _studentRepository = studentRepository;
-        }
 
         // แก้ไขให้ชนิดการคืนค่าตรงตามที่กำหนดใน interface
         public async Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync()

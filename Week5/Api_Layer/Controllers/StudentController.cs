@@ -8,17 +8,10 @@ namespace Week5.Api_Layer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController: ControllerBase
+    public class StudentController(IStudentService.GetService studentGetService, IStudentService.PostService studentPostService) : ControllerBase
     {
-        private readonly GetService _studentGetService;
-        private readonly PostService _studentPostService;
-
-        public StudentController(GetService studentGetService, PostService studentPostService)
-        {
-            _studentGetService = studentGetService;
-            _studentPostService = studentPostService;
-        }
-
+        private readonly GetService _studentGetService = studentGetService;
+        private readonly PostService _studentPostService = studentPostService;
 
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
