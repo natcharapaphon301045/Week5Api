@@ -16,7 +16,7 @@ namespace Week5.Infrastructure_Layer.Repositories
 
         public async Task<IEnumerable<Student>> GetAllAsync()
         {
-            return await _context.Student.ToListAsync(); // ให้แน่ใจว่า DbSet ชื่อ "Students"
+            return await _context.Student.ToListAsync(); 
         }
 
         public async Task<Student> GetByIdAsync(int studentId)
@@ -42,16 +42,12 @@ namespace Week5.Infrastructure_Layer.Repositories
         public async Task CreateStudentAsync(Student student)
         {
             await _context.Student.AddAsync(student);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0; 
-        }
-
-        public Task<bool> SaveChangeAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 

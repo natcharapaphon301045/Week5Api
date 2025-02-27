@@ -3,17 +3,31 @@
     public class ApiResponse<T>
     {
         public bool Success { get; set; }
-        public string Message { get; set; } = string.Empty;
+        public string Message { get; set; }
         public T? Data { get; set; }
 
-        public ApiResponse(bool success, string message, T? data = default) => 
-            (Success, Message, Data)=(success, message, data);
-        
+        // ✅ Constructor หลัก
+        public ApiResponse(bool success, string message, T data)
+        {
+            Success = success;
+            Message = message;
+            Data = data;
+        }
 
-        public static ApiResponse<T> SuccessResponse(T data, string message = "Success") =>
-            new (true, message, data);
+        // ✅ Constructor ที่รับ `data` เพียงตัวเดียว
+        public ApiResponse(T data)
+        {
+            Success = true;
+            Message = "Success";
+            Data = data;
+        }
 
-        public static ApiResponse<T> FailResponse(string message = "Failed") =>
-            new (false, message);
+        // ✅ Constructor ที่รับ `message` เพียงตัวเดียว
+        public ApiResponse(string message)
+        {
+            Success = false;
+            Message = message;
+            Data = default(T)!;
+        }
     }
 }

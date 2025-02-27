@@ -1,4 +1,4 @@
-﻿using Week5.Application_Layer.Interfaces;
+﻿/*using Week5.Application_Layer.Interfaces;
 using Week5.Domain_Layer.IRepositories;
 using Week5.Application_Layer.DTOs;
 using Week5.Domain_Layer.Entity;
@@ -6,11 +6,11 @@ using Week5.Application_Layer.Services;
 
 namespace Week5.Application_Layer.Services
 {
-    public class PostService : IStudentService.PostService
+    public class IStudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
 
-        public PostService(IStudentRepository studentRepository)
+        public IStudentService(IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
         }
@@ -69,3 +69,4 @@ namespace Week5.Application_Layer.Services
         }
     }
 }
+*/

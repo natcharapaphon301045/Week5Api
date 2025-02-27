@@ -12,10 +12,8 @@ builder.Services.AddDbContext<Week5DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IStudentService.GetService, Week5.Application_Layer.Services.GetService>();
-builder.Services.AddScoped<IStudentService.PostService, Week5.Application_Layer.Services.PostService>();
 
-
+/*ขาดหายไป*/
 
 /*IStudentService.IStudentGetService*/
 builder.Services.AddControllers();

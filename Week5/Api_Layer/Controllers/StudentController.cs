@@ -1,30 +1,34 @@
-﻿using Week5.Application_Layer.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.DTOs;
-using Week5.Domain_Layer.Entity;
-using static Week5.Application_Layer.Interfaces.IStudentService;
 
 namespace Week5.Api_Layer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController(IStudentService.GetService studentGetService, IStudentService.PostService studentPostService) : ControllerBase
+    public class StudentController : ControllerBase
     {
-        private readonly GetService _studentGetService = studentGetService;
-        private readonly PostService _studentPostService = studentPostService;
+        private readonly IStudentService _studentService;
+
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = await _studentGetService.GetAllStudentsAsync();
+            var students = await _studentService.GetAllStudentsAsync();
             return Ok(students);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetStudentById(int studentId)
+        public async Task<IActionResult> GetStudentById(int id)
         {
-            var student = await _studentGetService.GetStudentByIdAsync(studentId);
-            if (student == null) throw new KeyNotFoundException($"Student with ID {studentId} not found.");
+            var student = await _studentService.GetStudentByIdAsync(id);
+            if (student == null)
+                return NotFound(new { status = "error", message = $"Student with ID {id} not found." });
+
             return Ok(student);
         }
 
@@ -36,7 +40,7 @@ namespace Week5.Api_Layer.Controllers
                 return BadRequest(new { status = "error", message = "Invalid data" });
             }
 
-            var result = await _studentPostService.CreateStudentAsync(createDto);
+            var result = await _studentService.CreateStudentAsync(createDto);
 
             if (result?.Data == null)
             {
@@ -50,11 +54,11 @@ namespace Week5.Api_Layer.Controllers
         /*
         [HttpPost("initialize")]
         public async Task<IActionResult> InitializeStudentData()
-            {
-                var result = await _studentPostService.InitializeStudentDataAsync();
-                if (!result.Success) return BadRequest(result.Message);
-                return Ok(result.Message);
-            }
+        {
+            var result = await _studentService.InitializeStudentDataAsync();
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(result.Message);
+        }
         */
     }
 }
