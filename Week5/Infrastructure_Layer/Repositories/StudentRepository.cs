@@ -14,12 +14,11 @@ namespace Week5.Infrastructure_Layer.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Student>> GetAllAsync()
+        public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
             return await _context.Student.ToListAsync(); 
         }
-
-        public async Task<Student> GetByIdAsync(int studentId)
+        public async Task<Student> GetStudentByIdAsync(int studentId)
         {
             var student = await _context.Student.FindAsync(studentId);
             if (student == null)
@@ -32,23 +31,14 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             return await _context.Professor.FirstOrDefaultAsync(p => p.ProfessorID == professorId);
         }
-
         public async Task<Major?> GetMajorByIdAsync(int majorId)
         {
             return await _context.Major.FirstOrDefaultAsync(m => m.MajorID == majorId);
         }
-
-
         public async Task CreateStudentAsync(Student student)
         {
             await _context.Student.AddAsync(student);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync() > 0; 
-        }
     }
-
 }

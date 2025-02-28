@@ -11,19 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Week5DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// 🔹 Register Repositories
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IMajorRepository, MajorRepository>();
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IBehaviorScoreRepository, BehaviorScoreRepository>();
+builder.Services.AddScoped<IStudentClassRepository, StudentClassRepository>();
 
-/*ขาดหายไป*/
+// 🔹 Register Services
+builder.Services.AddScoped<IStudentService, StudentService>();
 
-/*IStudentService.IStudentGetService*/
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

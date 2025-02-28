@@ -50,15 +50,5 @@ namespace Week5.Api_Layer.Controllers
             return CreatedAtAction(nameof(GetStudentById), new { id = result.Data.StudentID },
                 new { status = "success", message = "Student created" });
         }
-
-        /*
-        [HttpPost("initialize")]
-        public async Task<IActionResult> InitializeStudentData()
-        {
-            var result = await _studentService.InitializeStudentDataAsync();
-            if (!result.Success) return BadRequest(result.Message);
-            return Ok(result.Message);
-        }
-        */
     }
 }

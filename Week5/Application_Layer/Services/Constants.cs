@@ -12,5 +12,9 @@ namespace Week5.Application_Layer.Services
         public const string ProfessorGetSuccess = "Professor Get Success";
         public const string MajorNotFound = "Major not found";
         public const string MajorGetSuccess = "Major Get Success";
+        public const string ClassNotFound = "Class not found";
+        public const string StudentClassGetSuccess = "Student-Class relation retrieved successfully";
+        public const string StudentClassNotFound = "Student-Class relation not found";
+  
     }
 }
