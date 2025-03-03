@@ -63,7 +63,20 @@ namespace Week5.Application_Layer.Services
             int majorId = studentDTO.MajorID > 0 ? studentDTO.MajorID : 1;
 
             var professor = await _professorRepository.GetProfessorByIdAsync(professorId);
+            if (professor == null)
+            {
+                professor = await _professorRepository.GetProfessorByIdAsync(1); // Default Professor
+                if (professor == null)
+                    return new ApiResponse<StudentDTO>(false, ResponseMessages.ProfessorNotFound,default!);
+            }
+
             var major = await _majorRepository.GetMajorByIdAsync(majorId);
+            if (major == null)
+            {
+                major = await _majorRepository.GetMajorByIdAsync(1); // Default Major
+                if (major == null)
+                    return new ApiResponse<StudentDTO>(false, ResponseMessages.MajorNotFound, default!);
+            }
 
             var student = new Student
             {
@@ -77,13 +90,13 @@ namespace Week5.Application_Layer.Services
 
             if (studentDTO.StudentClass?.Any() == true)
             {
-                student.StudentClass = await Task.WhenAll(studentDTO.StudentClass.Select(async sc => new StudentClass
+                student.StudentClass = studentDTO.StudentClass.Select(sc => new StudentClass
                 {
                     ClassID = sc.ClassID,
-                    Class = await _studentClassRepository.GetStudentClassByIdAsync(sc.ClassID, student.StudentID),
                     Student = student
-                }));
+                }).ToList();
             }
+
 
             if (studentDTO.BehaviorScore?.Any() == true)
             {
