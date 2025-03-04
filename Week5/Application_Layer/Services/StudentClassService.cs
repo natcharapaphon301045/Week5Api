@@ -30,9 +30,7 @@ namespace Week5.Application_Layer.Services
         {
             var studentClass = await _studentClassRepository.GetStudentClassByIdAsync(studentId, classId);
             if (studentClass == null)
-            {
-                return new ApiResponse<StudentClassDTO>(false, ResponseMessages.StudentClassNotFound, null);
-            }
+                if (studentClass == null) return default!;
 
             var studentClassDTO = new StudentClassDTO
             {

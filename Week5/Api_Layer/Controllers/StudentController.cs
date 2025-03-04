@@ -47,8 +47,8 @@ namespace Week5.Api_Layer.Controllers
                 return BadRequest(new { status = "error", message = "Student not created" });
             }
 
-            return CreatedAtAction(nameof(GetStudentById), new { id = result.Data.StudentID },
-                new { status = "success", message = "Student created" });
+            return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
+
         }
     }
 }

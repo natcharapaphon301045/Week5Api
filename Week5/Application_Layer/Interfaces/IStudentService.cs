@@ -7,7 +7,6 @@ namespace Week5.Application_Layer.Interfaces
     {
         Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync();
         Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId);
-        
         Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO);
     }
 }

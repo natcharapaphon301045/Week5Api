@@ -22,7 +22,6 @@ namespace Week5.Infrastructure_Layer.Repositories
 
             return major;
         }
-
         public async Task<List<Major>> GetAllMajorsAsync()
         {
             return await _context.Major.ToListAsync();

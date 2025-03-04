@@ -15,19 +15,22 @@ namespace Week5.Application_Layer.Services
         private readonly IProfessorRepository _professorRepository;
         private readonly IBehaviorScoreRepository _behaviorScoreRepository;
         private readonly IStudentClassRepository _studentClassRepository;
+        private readonly IClassRepository _classRepository;
 
         public StudentService(
             IStudentRepository studentRepository,
             IMajorRepository majorRepository,
             IProfessorRepository professorRepository,
             IBehaviorScoreRepository behaviorScoreRepository,
-            IStudentClassRepository studentClassRepository)
+            IStudentClassRepository studentClassRepository,
+            IClassRepository classRepository)
         {
             _studentRepository = studentRepository;
             _majorRepository = majorRepository;
             _professorRepository = professorRepository;
             _behaviorScoreRepository = behaviorScoreRepository;
             _studentClassRepository = studentClassRepository;
+            _classRepository = classRepository;
         }
 
         public async Task<ApiResponse<IEnumerable<StudentDTO>>> GetAllStudentsAsync()
@@ -37,8 +40,10 @@ namespace Week5.Application_Layer.Services
             {
                 StudentID = s.StudentID,
                 StudentName = s.StudentName,
-                StudentSurname = s.StudentSurname
+                StudentSurname = s.StudentSurname,
+                ProfessorID = s.ProfessorID
             }).ToList();
+
             return new ApiResponse<IEnumerable<StudentDTO>>(true, ResponseMessages.StudentGetSuccess, studentDTOs);
         }
 
@@ -59,23 +64,27 @@ namespace Week5.Application_Layer.Services
 
         public async Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO)
         {
-            int professorId = studentDTO.ProfessorID > 0 ? studentDTO.ProfessorID : 1;
-            int majorId = studentDTO.MajorID > 0 ? studentDTO.MajorID : 1;
+            var professor = await _professorRepository.GetProfessorByIdAsync(studentDTO.ProfessorID);
+            var major = await _majorRepository.GetMajorByIdAsync(studentDTO.MajorID);
 
-            var professor = await _professorRepository.GetProfessorByIdAsync(professorId);
             if (professor == null)
             {
-                professor = await _professorRepository.GetProfessorByIdAsync(1); // Default Professor
-                if (professor == null)
-                    return new ApiResponse<StudentDTO>(false, ResponseMessages.ProfessorNotFound,default!);
+                var emptyStudent = new StudentDTO
+                {
+                    StudentName = string.Empty,  // หรือใช้ค่าอื่นที่เหมาะสม
+                    StudentSurname = string.Empty // หรือใช้ค่าอื่นที่เหมาะสม
+                };
+                return new ApiResponse<StudentDTO>(false, ResponseMessages.ProfessorNotFound, emptyStudent);
             }
 
-            var major = await _majorRepository.GetMajorByIdAsync(majorId);
             if (major == null)
             {
-                major = await _majorRepository.GetMajorByIdAsync(1); // Default Major
-                if (major == null)
-                    return new ApiResponse<StudentDTO>(false, ResponseMessages.MajorNotFound, default!);
+                var emptyStudent = new StudentDTO
+                {
+                    StudentName = string.Empty,  // หรือใช้ค่าอื่นที่เหมาะสม
+                    StudentSurname = string.Empty // หรือใช้ค่าอื่นที่เหมาะสม
+                };
+                return new ApiResponse<StudentDTO>(false, ResponseMessages.MajorNotFound, emptyStudent);
             }
 
             var student = new Student
@@ -90,13 +99,19 @@ namespace Week5.Application_Layer.Services
 
             if (studentDTO.StudentClass?.Any() == true)
             {
-                student.StudentClass = studentDTO.StudentClass.Select(sc => new StudentClass
+                var studentClasses = await Task.WhenAll(studentDTO.StudentClass.Select(async sc =>
                 {
-                    ClassID = sc.ClassID,
-                    Student = student
-                }).ToList();
-            }
+                    var classEntity = await _classRepository.GetClassByIdAsync(sc.ClassID);
+                    return classEntity == null ? null : new StudentClass
+                    {
+                        ClassID = sc.ClassID,
+                        Class = classEntity,
+                        Student = student
+                    };
+                }));
 
+                student.StudentClass = studentClasses.Where(sc => sc != null).ToList()!;
+            }
 
             if (studentDTO.BehaviorScore?.Any() == true)
             {

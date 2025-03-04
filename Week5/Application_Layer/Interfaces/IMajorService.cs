@@ -5,7 +5,8 @@ namespace Week5.Application_Layer.Interfaces
 {
     public interface IMajorService
     {
-        Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId);
         Task<ApiResponse<List<Major>>> GetAllMajorsAsync();
+        Task<ApiResponse<Major>> GetMajorByIdAsync(int majorId);
     }
+
 }

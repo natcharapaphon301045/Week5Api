@@ -13,12 +13,10 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             _context = context;
         }
-
         public async Task<IEnumerable<StudentClass>> GetAllStudentClassAsync()
         {
             return await _context.StudentClass.ToListAsync();
         }
-
         public async Task<StudentClass?> GetStudentClassByIdAsync(int studentId, int classId)
         {
             return await _context.StudentClass

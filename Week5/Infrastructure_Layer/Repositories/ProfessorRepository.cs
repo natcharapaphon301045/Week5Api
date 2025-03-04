@@ -13,7 +13,6 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             _context = context;
         }
-
         public async Task<List<Professor>> GetAllProfessorAsync()
         {
             return await _context.Professor.ToListAsync();
