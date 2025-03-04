@@ -9,10 +9,7 @@ namespace Week5.Application_Layer.DTOs
         public required string StudentName { get; set; }
         public required string StudentSurname { get; set; }
 
-        [Required(ErrorMessage = "Professor is required")]
         public int ProfessorID { get; set; }
-
-        [Required(ErrorMessage = "Major is required")]
         public int MajorID { get; set; }
 
         public List<StudentClass>? StudentClass { get; set; }

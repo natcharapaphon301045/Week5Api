@@ -41,7 +41,10 @@ namespace Week5.Application_Layer.Services
                 StudentID = s.StudentID,
                 StudentName = s.StudentName,
                 StudentSurname = s.StudentSurname,
-                ProfessorID = s.ProfessorID
+                ProfessorID = s.ProfessorID,
+                MajorID = s.MajorID,
+                /*StudentClass*/
+                /*BehaviorScore*/
             }).ToList();
 
             return new ApiResponse<IEnumerable<StudentDTO>>(true, ResponseMessages.StudentGetSuccess, studentDTOs);
@@ -57,7 +60,9 @@ namespace Week5.Application_Layer.Services
             {
                 StudentID = student.StudentID,
                 StudentName = student.StudentName,
-                StudentSurname = student.StudentSurname
+                StudentSurname = student.StudentSurname,
+                ProfessorID = student.ProfessorID,
+                MajorID = student.MajorID,
             };
             return new ApiResponse<StudentDTO>(studentDTO);
         }

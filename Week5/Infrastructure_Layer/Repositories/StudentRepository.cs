@@ -16,16 +16,25 @@ namespace Week5.Infrastructure_Layer.Repositories
 
         public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
-            return await _context.Student.ToListAsync(); 
+            return await _context.Student
+                .AsNoTracking()
+                .Include(s => s.StudentClass)
+                .ThenInclude(sc => sc.Class)
+                .Include(s => s.BehaviorScore)
+                .ToListAsync();
         }
         public async Task<Student> GetStudentByIdAsync(int studentId)
         {
-            var student = await _context.Student.FindAsync(studentId);
+            var student = await _context.Student
+                .Include(s => s.StudentClass)
+                .ThenInclude(sc => sc.Class)
+                .Include(s => s.BehaviorScore)
+                .FirstOrDefaultAsync(s => s.StudentID == studentId);
+
             if (student == null)
                 throw new KeyNotFoundException($"Student with ID {studentId} not found.");
 
             return student;
-
         }
         public async Task<Professor?> GetProfessorByIdAsync(int professorId)
         {
