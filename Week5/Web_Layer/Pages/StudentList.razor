@@ -1,0 +1,72 @@
+﻿.top-bar {
+    background-color: #D9D9D9;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.center-table {
+    margin: 0 auto;
+    width: 80%;
+    padding: 20px;
+}
+
+@page "/studentlist"
+@inject HttpClient Http
+@using Week5.Application_Layer.DTOs
+
+<!-- Top Bar -->
+<div class="top-bar">
+    Student List
+</div>
+
+<!-- Table for displaying students -->
+@if (student == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="center-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in student)
+                {
+                    <tr>
+                        <td>@s.StudentID</td>
+                        <td>@s.StudentName</td>
+                        <td>@s.StudentSurname</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<StudentDTO>? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // เรียกข้อมูลจาก API
+        var response = await Http.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
+        if (response != null && response.Success && response.Data != null)  // เปลี่ยนจาก response.IsSuccess เป็น response.Success
+        {
+            student = response.Data.ToList();
+        }
+        else
+        {
+            // Handle error here (optional)
+        }
+    }
+}
+
+

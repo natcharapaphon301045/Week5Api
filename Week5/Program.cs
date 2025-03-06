@@ -34,6 +34,10 @@ builder.Services.AddCors(options =>
 // 🔹 Add Controllers
 builder.Services.AddControllers();
 
+// razor pages
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
 var app = builder.Build();
 
 // 🔹 Enable Middleware
@@ -43,4 +47,9 @@ app.UseAuthorization();
 
 // 🔹 Map Endpoints
 app.MapControllers();
+app.MapRazorPages();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
+
 app.Run();
