@@ -1,19 +1,6 @@
-﻿.top-bar {
-    background-color: #D9D9D9;
-    padding: 10px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.center-table {
-    margin: 0 auto;
-    width: 80%;
-    padding: 20px;
-}
-
-@page "/studentlist"
+﻿@page "/studentlist"
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 @using Week5.Application_Layer.DTOs
 
 <!-- Top Bar -->
@@ -35,6 +22,7 @@ else
                     <th>ID</th>
                     <th>Name</th>
                     <th>Surname</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +32,9 @@ else
                         <td>@s.StudentID</td>
                         <td>@s.StudentName</td>
                         <td>@s.StudentSurname</td>
+                        <td>
+                            <button @onclick="() => ViewDetails(s.StudentID)">View Details</button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -56,9 +47,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // เรียกข้อมูลจาก API
+        // Fetch data from API
         var response = await Http.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
-        if (response != null && response.Success && response.Data != null)  // เปลี่ยนจาก response.IsSuccess เป็น response.Success
+        if (response != null && response.Success && response.Data != null)
         {
             student = response.Data.ToList();
         }
@@ -67,6 +58,10 @@ else
             // Handle error here (optional)
         }
     }
+
+    private void ViewDetails(int studentId)
+    {
+        // Navigate to the student details page
+        NavigationManager.NavigateTo($"/studentdetails/{studentId}");
+    }
 }
-
-
