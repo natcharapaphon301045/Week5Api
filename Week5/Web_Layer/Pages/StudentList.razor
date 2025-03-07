@@ -13,6 +13,10 @@
 {
     <p><em>Loading...</em></p>
 }
+else if (!student.Any())
+{
+    <p>No students available.</p>
+}
 else
 {
     <div class="center-table">
@@ -47,15 +51,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Fetch data from API
-        var response = await Http.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
-        if (response != null && response.Success && response.Data != null)
+        try
         {
-            student = response.Data.ToList();
+            // Fetch data from API
+            var response = await Http.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
+
+            if (response != null && response.Success && response.Data != null)
+            {
+                student = response.Data.ToList();
+            }
+            else
+            {
+                // Handle error: Show message or log error
+                student = new List<StudentDTO>(); // Default to empty list
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Handle error here (optional)
+            // Handle exception: Show error message
+            Console.WriteLine($"Error fetching student data: {ex.Message}");
+            student = new List<StudentDTO>(); // Default to empty list
         }
     }
 

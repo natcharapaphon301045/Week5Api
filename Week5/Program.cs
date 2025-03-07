@@ -4,25 +4,18 @@ using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Repositories;
 using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Week5.Application_Layer.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Add Database Context
-builder.Services.AddDbContext<Week5DbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient();
 
-// 🔹 Register Repositories
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IMajorRepository, MajorRepository>();
-builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
-builder.Services.AddScoped<IBehaviorScoreRepository, BehaviorScoreRepository>();
-builder.Services.AddScoped<IStudentClassRepository, StudentClassRepository>();
-builder.Services.AddScoped<IClassRepository, ClassRepository>();
-
-// 🔹 Register Services
-builder.Services.AddScoped<IStudentService, StudentService>();
-
-// 🔹 Enable CORS (Allow Any Origin for Testing)
+// Enable CORS (Allow Any Origin for Testing)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -31,25 +24,44 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
-// 🔹 Add Controllers
-builder.Services.AddControllers();
+// Add Database Context
+builder.Services.AddDbContext<Week5DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// razor pages
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+// Register Repositories
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IMajorRepository, MajorRepository>();
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IBehaviorScoreRepository, BehaviorScoreRepository>();
+builder.Services.AddScoped<IStudentClassRepository, StudentClassRepository>();
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+
+// Register Services
+builder.Services.AddScoped<IStudentService, StudentService>();
+
+// Add Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// 🔹 Enable Middleware
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
-app.UseCors("AllowAll"); // ✅ Enable CORS
+app.UseCors("AllowAll"); // Enable CORS
 app.UseAuthorization();
 
-// 🔹 Map Endpoints
+// Map Endpoints
 app.MapControllers();
 app.MapRazorPages();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
 
 app.Run();
