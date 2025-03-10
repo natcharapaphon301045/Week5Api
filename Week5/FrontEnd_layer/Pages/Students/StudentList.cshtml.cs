@@ -1,20 +1,22 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using Week5.Application_Layer.DTOs;
+using Week5.Application_Layer.Services;
 
 public class StudentListModel : PageModel
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<StudentListModel> _logger;
 
-
-    public StudentListModel(HttpClient httpClient)
+    public StudentListModel(HttpClient httpClient, ILogger<StudentListModel> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public List<StudentDTO> Students { get; set; } = new List<StudentDTO>();
-
 
     public async Task OnGetAsync()
     {
@@ -28,12 +30,18 @@ public class StudentListModel : PageModel
             }
             else
             {
+                _logger.LogWarning("No student data received from API.");
                 Students = new List<StudentDTO>();
             }
         }
+        catch (HttpRequestException httpEx)
+        {
+            _logger.LogError($"HTTP request error: {httpEx.Message}");
+            Students = new List<StudentDTO>();
+        }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error fetching student data: {ex.Message}");
+            _logger.LogError($"Unexpected error: {ex.Message}");
             Students = new List<StudentDTO>();
         }
     }

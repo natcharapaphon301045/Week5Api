@@ -1,44 +1,27 @@
 ﻿@page
-@model StudentListModel
+@model Week5.FrontEnd_Layer.Pages.Students.StudentList
 @{
     ViewData["Title"] = "Student List";
 }
 
-<!-- Top Bar -->
-<div class="top-bar">
-    <h2>Student List</h2>
-</div>
+<h1>Student List</h1>
 
-<!-- Table for displaying students -->
-@if (Model.Students == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (!Model.Students.Any())
-{
-    <p>No students available.</p>
-}
-else
-{
-    <div class="center-table">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Surname</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var student in Model.Students)
-                {
-                    <tr>
-                        <td>@student.StudentID</td>
-                        <td>@student.StudentName</td>
-                        <td>@student.StudentSurname</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Major</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model.Students)
+        {
+            <tr>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@student.Major</td>
+            </tr>
+        }
+    </tbody>
+</table>
