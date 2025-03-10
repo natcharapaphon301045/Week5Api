@@ -5,44 +5,48 @@ using Microsoft.Extensions.Logging;
 using Week5.Application_Layer.DTOs;
 using Week5.Application_Layer.Services;
 
-public class StudentListModel : PageModel
+namespace Week5.FrontEnd_Layer.Pages.Students
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<StudentListModel> _logger;
-
-    public StudentListModel(HttpClient httpClient, ILogger<StudentListModel> logger)
+    public class StudentListModel : PageModel
     {
-        _httpClient = httpClient;
-        _logger = logger;
-    }
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<StudentListModel> _logger;
 
-    public List<StudentDTO> Students { get; set; } = new List<StudentDTO>();
-
-    public async Task OnGetAsync()
-    {
-        try
+        public StudentListModel(HttpClient httpClient, ILogger<StudentListModel> logger)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
+            _httpClient = httpClient;
+            _logger = logger;
+        }
 
-            if (response != null && response.Success && response.Data != null)
+        public List<StudentDTO> Students { get; set; } = new List<StudentDTO>();
+
+        public async Task OnGetAsync()
+        {
+            try
             {
-                Students = response.Data.ToList();
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<StudentDTO>>>("https://localhost:5285/api/student");
+
+                if (response != null && response.Success && response.Data != null)
+                {
+                    Students = response.Data.ToList();
+                }
+                else
+                {
+                    _logger.LogWarning("No student data received from API.");
+                    Students = new List<StudentDTO>();
+                }
             }
-            else
+            catch (HttpRequestException httpEx)
             {
-                _logger.LogWarning("No student data received from API.");
+                _logger.LogError($"HTTP request error: {httpEx.Message}");
+                Students = new List<StudentDTO>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unexpected error: {ex.Message}");
                 Students = new List<StudentDTO>();
             }
         }
-        catch (HttpRequestException httpEx)
-        {
-            _logger.LogError($"HTTP request error: {httpEx.Message}");
-            Students = new List<StudentDTO>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Unexpected error: {ex.Message}");
-            Students = new List<StudentDTO>();
-        }
     }
+
 }

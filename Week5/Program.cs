@@ -25,7 +25,7 @@ builder.Services.AddScoped<IClassRepository, ClassRepository>();
 // Register Services
 builder.Services.AddScoped<IStudentService, StudentService>();
 
-builder.Services.AddHttpClient<StudentListModel>();
+builder.Services.AddHttpClient<StudentDTO>();
 
 // Add Controllers
 builder.Services.AddControllers();

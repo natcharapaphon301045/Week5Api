@@ -1,5 +1,5 @@
 ﻿@page
-@model Week5.FrontEnd_Layer.Pages.Students.StudentList
+@model Week5.FrontEnd_Layer.Pages.Students.StudentListModel
 @{
     ViewData["Title"] = "Student List";
 }
@@ -9,18 +9,18 @@
 <table class="table">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
-            <th>Age</th>
-            <th>Major</th>
+            <th>Surname</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var student in Model.Students)
         {
             <tr>
-                <td>@student.Name</td>
-                <td>@student.Age</td>
-                <td>@student.Major</td>
+                <td>@student.StudentID</td>
+                <td>@student.StudentName</td>
+                <td>@student.StudentSurname</td>
             </tr>
         }
     </tbody>
