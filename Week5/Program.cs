@@ -28,10 +28,9 @@ builder.Services.AddScoped<IStudentService, StudentService>();
 // Add Controllers
 builder.Services.AddControllers();
 
-// Remove Blazor services
-// builder.Services.AddRazorPages();
-// builder.Services.AddServerSideBlazor();
-// builder.Services.AddHttpClient();
+// Add Razor Pages services
+builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
 // Enable CORS (Allow Any Origin for Testing)
 builder.Services.AddCors(options =>
@@ -60,8 +59,6 @@ app.UseAuthorization();
 
 // Map Endpoints
 app.MapControllers();
-// app.MapRazorPages();
-// app.MapBlazorHub();
-// app.MapFallbackToPage("/_Host");
+app.MapRazorPages();
 
 app.Run();

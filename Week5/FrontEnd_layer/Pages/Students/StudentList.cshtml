@@ -1,4 +1,44 @@
 ﻿@page
-@model MyApp.Namespace.StudentListModel
+@model StudentListModel
 @{
+    ViewData["Title"] = "Student List";
+}
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <h2>Student List</h2>
+</div>
+
+<!-- Table for displaying students -->
+@if (Model.Students == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!Model.Students.Any())
+{
+    <p>No students available.</p>
+}
+else
+{
+    <div class="center-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.Students)
+                {
+                    <tr>
+                        <td>@student.StudentID</td>
+                        <td>@student.StudentName</td>
+                        <td>@student.StudentSurname</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
