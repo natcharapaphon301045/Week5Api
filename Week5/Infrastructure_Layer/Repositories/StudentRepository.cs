@@ -2,6 +2,7 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Week5.Application_Layer.DTOs;
 
 namespace Week5.Infrastructure_Layer.Repositories
 {
@@ -48,6 +49,34 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             await _context.Student.AddAsync(student);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateStudentAsync(int studentId, StudentDTO studentDTO)
+        {
+            var student = await _context.Student.FindAsync(studentId);
+            if (student == null)
+                return false;
+
+            student.StudentName = studentDTO.StudentName;
+            student.StudentSurname = studentDTO.StudentSurname;
+            student.ProfessorID = studentDTO.ProfessorID;
+            student.MajorID = studentDTO.MajorID;
+
+            _context.Student.Update(student);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        public async Task<bool> DeleteStudentAsync(int studentId)
+        {
+            var student = await _context.Student.FindAsync(studentId);
+            if (student == null)
+                return false;
+
+            _context.Student.Remove(student);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

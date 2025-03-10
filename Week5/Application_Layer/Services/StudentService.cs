@@ -134,5 +134,36 @@ namespace Week5.Application_Layer.Services
             await _studentRepository.CreateStudentAsync(student);
             return new ApiResponse<StudentDTO>(true, ResponseMessages.StudentPostSuccess, studentDTO);
         }
+
+        public async Task<ApiResponse<Student>> UpdateStudentAsync(int studentId, StudentDTO studentDTO)
+        {
+            if (studentId != studentDTO.StudentID)
+            {
+                return new ApiResponse<Student>("Student ID mismatch");
+            }
+
+            var updateResult = await _studentRepository.UpdateStudentAsync(studentId, studentDTO);
+            if (!updateResult)
+            {
+                return new ApiResponse<Student>("Student not found");
+            }
+
+            var updatedStudent = await _studentRepository.GetStudentByIdAsync(studentId);
+            return new ApiResponse<Student>(true, ResponseMessages.StudentUpdateSuccess, updatedStudent);
+        }
+
+
+
+        public async Task<ApiResponse<bool>> DeleteStudentAsync(int studentId)
+    {
+        var result = await _studentRepository.DeleteStudentAsync(studentId);
+        if (!result)
+        {
+            return new ApiResponse<bool>("Student not found or already deleted");
+        }
+
+        return new ApiResponse<bool>(true);
+    }
+    
     }
 }

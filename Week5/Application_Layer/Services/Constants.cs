@@ -15,6 +15,6 @@ namespace Week5.Application_Layer.Services
         public const string ClassNotFound = "Class not found";
         public const string StudentClassGetSuccess = "Student-Class relation retrieved successfully";
         public const string StudentClassNotFound = "Student-Class relation not found";
-  
+        public const string StudentUpdateSuccess = "Student Update Success";
     }
 }

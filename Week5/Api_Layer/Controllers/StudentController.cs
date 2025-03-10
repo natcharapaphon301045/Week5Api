@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Week5.Api_Layer.Controllers
 {
@@ -49,6 +50,38 @@ namespace Week5.Api_Layer.Controllers
 
             return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
 
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = await _studentService.UpdateStudentAsync(id, studentDTO);
+            if (!response.Success)
+            {
+                return NotFound(response.Message);
+            }
+
+            return Ok(response);
+        }
+
+
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var result = await _studentService.DeleteStudentAsync(id);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return NoContent();
         }
     }
 }

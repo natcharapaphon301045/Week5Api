@@ -1,4 +1,5 @@
-﻿using Week5.Domain_Layer.Entity;
+﻿using Week5.Application_Layer.DTOs;
+using Week5.Domain_Layer.Entity;
 
 namespace Week5.Domain_Layer.IRepositories
 {
@@ -9,6 +10,8 @@ namespace Week5.Domain_Layer.IRepositories
         Task<Professor?> GetProfessorByIdAsync(int professorId);
         Task<Major?> GetMajorByIdAsync(int majorId);
         Task CreateStudentAsync(Student student);
-         
+        Task<bool> UpdateStudentAsync(int studentId, StudentDTO studentDTO);
+        Task<bool> DeleteStudentAsync(int studentId);
     }
+
 }

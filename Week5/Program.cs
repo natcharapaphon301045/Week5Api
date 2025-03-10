@@ -10,20 +10,6 @@ using Week5.Application_Layer.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient();
-
-// Enable CORS (Allow Any Origin for Testing)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-});
-
 // Add Database Context
 builder.Services.AddDbContext<Week5DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +27,20 @@ builder.Services.AddScoped<IStudentService, StudentService>();
 
 // Add Controllers
 builder.Services.AddControllers();
+
+// Remove Blazor services
+// builder.Services.AddRazorPages();
+// builder.Services.AddServerSideBlazor();
+// builder.Services.AddHttpClient();
+
+// Enable CORS (Allow Any Origin for Testing)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -60,8 +60,8 @@ app.UseAuthorization();
 
 // Map Endpoints
 app.MapControllers();
-app.MapRazorPages();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+// app.MapRazorPages();
+// app.MapBlazorHub();
+// app.MapFallbackToPage("/_Host");
 
 app.Run();
