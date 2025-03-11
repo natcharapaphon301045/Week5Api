@@ -21,6 +21,7 @@
     "Week5": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "yourpage",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
