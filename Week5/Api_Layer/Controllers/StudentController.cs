@@ -15,14 +15,12 @@ namespace Week5.Api_Layer.Controllers
         {
             _studentService = studentService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
             var students = await _studentService.GetAllStudentsAsync();
             return Ok(students);
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
@@ -32,7 +30,6 @@ namespace Week5.Api_Layer.Controllers
 
             return Ok(student);
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateStudent([FromBody] StudentDTO createDto)
         {
@@ -51,7 +48,6 @@ namespace Week5.Api_Layer.Controllers
             return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
 
         }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
         {
@@ -68,10 +64,6 @@ namespace Week5.Api_Layer.Controllers
 
             return Ok(response);
         }
-
-
-
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {

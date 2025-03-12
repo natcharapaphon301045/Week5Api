@@ -14,7 +14,6 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             _context = context;
         }
-
         public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
             return await _context.Student
@@ -50,7 +49,6 @@ namespace Week5.Infrastructure_Layer.Repositories
             await _context.Student.AddAsync(student);
             await _context.SaveChangesAsync();
         }
-
         public async Task<bool> UpdateStudentAsync(int studentId, StudentDTO studentDTO)
         {
             var student = await _context.Student.FindAsync(studentId);
@@ -66,8 +64,6 @@ namespace Week5.Infrastructure_Layer.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-
-
         public async Task<bool> DeleteStudentAsync(int studentId)
         {
             var student = await _context.Student.FindAsync(studentId);
