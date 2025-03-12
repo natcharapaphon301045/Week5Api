@@ -4,8 +4,6 @@ using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Repositories;
 using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Week5.Application_Layer.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
