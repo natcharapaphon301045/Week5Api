@@ -1,4 +1,23 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(function () {
+    $("#createStudentForm").on("submit", function (event) {
+        event.preventDefault();
 
-// Write your JavaScript code.
+        var studentData = {
+            studentName: $("#studentName").val(),
+            major: $("#major").val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Student/Create",
+            data: studentData,
+            success: function (response) {
+                alert("Student added successfully!");
+                $("#createStudentModal").modal("hide");
+            },
+            error: function () {
+                alert("Error adding student.");
+            }
+        });
+    });
+});

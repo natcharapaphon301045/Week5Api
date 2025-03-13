@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Student List";
+}
+
+<h2>Student List</h2>
+
+<!-- ปุ่มเปิด Popup -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createStudentModal">
+    Add Student
+</button>
+
+<!-- ✅ ดึง Partial View ที่เป็น Modal -->
+<partial name="_CreateStudentModal" />
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
