@@ -1,6 +1,7 @@
 ﻿@page
 @model StudentsModel
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Students";
 }
 
@@ -9,7 +10,7 @@
     <div>
         <input type="text" id="searchStudentId" placeholder="Enter Student ID" />
         <button class="btn btn-primary" onclick="searchStudent()">Search</button>
-        <button class="btn btn-success" onclick="goToCreateStudent()">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createStudentModal">
             <i class="fas fa-plus"></i> Create Student
         </button>
     </div>
@@ -22,45 +23,110 @@
 else
 {
     <div class="table-container">
-        @if (Model.Students == null)
-        {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {
-            <table class="table">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Professor</th>
+                    <th>Major</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.Students)
+                {
                     <tr>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Professor</th>
-                        <th>Major</th>
-                        <th>Actions</th>
+                        <td>@student.StudentID</td>
+                        <td>@student.StudentName</td>
+                        <td>@student.StudentSurname</td>
+                        <td>@student.ProfessorID</td>
+                        <td>@student.MajorID</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editStudentModal" onclick="setEditStudent(@student.StudentID)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStudentModal" onclick="setDeleteStudent(@student.StudentID)">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in Model.Students)
-                    {
-                        <tr>
-                            <td>@student.StudentName</td>
-                            <td>@student.StudentSurname</td>
-                            <td>@student.ProfessorID</td>
-                            <td>@student.MajorID</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editStudent(@student.StudentID)">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteStudent(@student.StudentID)">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+                }
+            </tbody>
+        </table>
     </div>
 }
+
+<!-- Create Student Modal -->
+<div class="modal fade" id="createStudentModal" tabindex="-1" aria-labelledby="createStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createStudentModalLabel">Create Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createStudentForm">
+                    <div class="mb-3">
+                        <label for="createStudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="createStudentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createStudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="createStudentSurname" required>
+                    </div>
+                    <!-- Add other fields as needed -->
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="editStudentId">
+                    <div class="mb-3">
+                        <label for="editStudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editStudentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="editStudentSurname" required>
+                    </div>
+                    <!-- Add other fields as needed -->
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Student Modal -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this student?</p>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteStudent()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         function searchStudent() {
@@ -72,55 +138,85 @@ else
             }
         }
 
-        function goToCreateStudent() {
-            window.location.href = '/CreateStudent';
+        function setEditStudent(studentId) {
+            document.getElementById('editStudentId').value = studentId;
+            // Fetch student details and set them in the form
         }
 
-        function editStudent(studentId) {
-            const newName = prompt("Enter new name:");
-            const newSurname = prompt("Enter new surname:");
+        function setDeleteStudent(studentId) {
+            document.getElementById('deleteStudentId').value = studentId;
+        }
 
-            if (!newName || !newSurname) {
-                alert("Name and Surname are required.");
-                return;
-            }
+        function confirmDeleteStudent() {
+            var studentId = document.getElementById('deleteStudentId').value;
+            fetch(`/Students/Delete/${studentId}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete student.');
+                }
+            });
+        }
 
-            const data = {
-                studentName: newName,
-                studentSurname: newSurname
+        document.getElementById('createStudentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var name = document.getElementById('createStudentName').value;
+            var surname = document.getElementById('createStudentSurname').value;
+            // Add other fields as needed
+
+            var data = {
+                studentName: name,
+                studentSurname: surname
+                // Add other fields as needed
+            };
+
+            fetch('/api/Student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Student created successfully.');
+                    location.reload();
+                } else {
+                    alert('Failed to create student.');
+                }
+            }).catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('editStudentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var studentId = document.getElementById('editStudentId').value;
+            var name = document.getElementById('editStudentName').value;
+            var surname = document.getElementById('editStudentSurname').value;
+            // Add other fields as needed
+
+            var data = {
+                studentName: name,
+                studentSurname: surname
+                // Add other fields as needed
             };
 
             fetch(`/api/Student/${studentId}`, {
-                method: "PUT",
+                method: 'PUT',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
-            .then(response => response.json())
+            }).then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    alert("Student updated successfully.");
+                    alert('Student updated successfully.');
                     location.reload();
                 } else {
-                    alert("Failed to update student.");
+                    alert('Failed to update student.');
                 }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        function deleteStudent(studentId) {
-            if (confirm('Are you sure you want to delete this student?')) {
-                fetch(`/Students/Delete/${studentId}`, {
-                    method: 'DELETE'
-                }).then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Failed to delete student.');
-                    }
-                });
-            }
-        }
+            }).catch(error => console.error('Error:', error));
+        });
     </script>
 }
