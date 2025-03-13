@@ -59,30 +59,7 @@ else
 }
 
 <!-- Create Student Modal -->
-<div class="modal fade" id="createStudentModal" tabindex="-1" aria-labelledby="createStudentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createStudentModalLabel">Create Student</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createStudentForm">
-                    <div class="mb-3">
-                        <label for="createStudentName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="createStudentName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="createStudentSurname" class="form-label">Surname</label>
-                        <input type="text" class="form-control" id="createStudentSurname" required>
-                    </div>
-                    <!-- Add other fields as needed -->
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_CreateStudentModal")
 
 <!-- Edit Student Modal -->
 <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
@@ -105,6 +82,7 @@ else
                     </div>
                     <!-- Add other fields as needed -->
                     <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
             </div>
         </div>
@@ -122,6 +100,7 @@ else
             <div class="modal-body">
                 <p>Are you sure you want to delete this student?</p>
                 <button type="button" class="btn btn-danger" onclick="confirmDeleteStudent()">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -164,12 +143,14 @@ else
             event.preventDefault();
             var name = document.getElementById('createStudentName').value;
             var surname = document.getElementById('createStudentSurname').value;
-            // Add other fields as needed
+            var professorId = document.getElementById('createProfessorId').value;
+            var majorId = document.getElementById('createMajorId').value;
 
             var data = {
                 studentName: name,
-                studentSurname: surname
-                // Add other fields as needed
+                studentSurname: surname,
+                professorID: professorId,
+                majorID: majorId
             };
 
             fetch('/api/Student', {

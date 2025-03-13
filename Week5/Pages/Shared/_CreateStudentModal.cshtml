@@ -2,23 +2,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createStudentModalLabel">Add Student</h5>
+                <h5 class="modal-title" id="createStudentModalLabel">Create Student</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="createStudentForm">
                     <div class="mb-3">
-                        <label for="studentName" class="form-label">Student Name</label>
-                        <input type="text" class="form-control" id="studentName" name="studentName" required>
+                        <label for="createStudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="createStudentName" required>
                     </div>
                     <div class="mb-3">
-                        <label for="major" class="form-label">Major</label>
-                        <select class="form-select" id="major" name="major">
-                            <option value="1">Computer Science</option>
-                            <option value="2">Mathematics</option>
-                        </select>
+                        <label for="createStudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="createStudentSurname" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <div class="mb-3">
+                        <label for="createProfessorId" class="form-label">Professor ID</label>
+                        <input type="number" class="form-control" id="createProfessorId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createMajorId" class="form-label">Major ID</label>
+                        <input type="number" class="form-control" id="createMajorId" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
             </div>
         </div>
