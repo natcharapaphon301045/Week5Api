@@ -51,7 +51,6 @@ namespace Week5.Application_Layer.Services
 
             return new ApiResponse<IEnumerable<StudentDTO>>(true, ResponseMessages.StudentGetSuccess, studentDTOs);
         }
-
         public async Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.GetStudentByIdAsync(studentId);
@@ -68,8 +67,10 @@ namespace Week5.Application_Layer.Services
                 MajorID = student.MajorID,
                 //MajorName = student.Major.MajorName,
             };
-            return new ApiResponse<StudentDTO>(studentDTO);
+
+            return new ApiResponse<StudentDTO>(true, ResponseMessages.StudentGetSuccess, studentDTO);
         }
+
 
         public async Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO)
         {
@@ -155,9 +156,6 @@ namespace Week5.Application_Layer.Services
             var updatedStudent = await _studentRepository.GetStudentByIdAsync(studentId);
             return new ApiResponse<Student>(true, ResponseMessages.StudentUpdateSuccess, updatedStudent);
         }
-
-
-
         public async Task<ApiResponse<bool>> DeleteStudentAsync(int studentId)
     {
         var result = await _studentRepository.DeleteStudentAsync(studentId);

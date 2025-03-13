@@ -28,11 +28,11 @@ namespace Week5.Api_Layer.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
-            var student = await _studentService.GetStudentByIdAsync(id);
-            if (student == null)
+            var response = await _studentService.GetStudentByIdAsync(id);
+            if (response == null)
                 return NotFound(new { status = "error", message = $"Student with ID {id} not found." });
 
-            return Ok(student);
+            return Ok(response.Data);
         }
         [HttpPost]
         public async Task<IActionResult> CreateStudent([FromBody] StudentDTO createDto)

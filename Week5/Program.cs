@@ -15,14 +15,11 @@ using Week5.Application_Layer.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Add Database Context
 builder.Services.AddDbContext<Week5DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🔹 Add Razor Pages
 builder.Services.AddRazorPages();
 
-// 🔹 Dependency Injection (DI)
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
