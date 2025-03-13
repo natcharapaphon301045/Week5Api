@@ -25,8 +25,4 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 
 	</ItemGroup>
-<<<<<<< HEAD
-
-=======
->>>>>>> 30192faf29e7c1f293c4cf55278e8a175981c954
 </Project>

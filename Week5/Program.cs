@@ -6,13 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.Services;
-<<<<<<< HEAD
+
 using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Persistence;
 using Week5.Infrastructure_Layer.Repositories;
-=======
+
 using Week5.Application_Layer.DTOs;
->>>>>>> 30192faf29e7c1f293c4cf55278e8a175981c954
 
 var builder = WebApplication.CreateBuilder(args);
 
