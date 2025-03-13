@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Week5.Api_Layer.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
@@ -15,14 +15,16 @@ namespace Week5.Api_Layer.Controllers
         {
             _studentService = studentService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = await _studentService.GetAllStudentsAsync();
-            return Ok(students);
+            var response = await _studentService.GetAllStudentsAsync();
+            if (response.Success)
+            {
+                return Ok(response.Data);
+            }
+            return NotFound(response.Message);
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
@@ -32,7 +34,6 @@ namespace Week5.Api_Layer.Controllers
 
             return Ok(student);
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateStudent([FromBody] StudentDTO createDto)
         {
@@ -51,7 +52,6 @@ namespace Week5.Api_Layer.Controllers
             return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
 
         }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
         {
@@ -68,20 +68,15 @@ namespace Week5.Api_Layer.Controllers
 
             return Ok(response);
         }
-
-
-
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var result = await _studentService.DeleteStudentAsync(id);
-            if (!result.Success)
+            var response = await _studentService.DeleteStudentAsync(id);
+            if (response.Success)
             {
-                return BadRequest(result.Message);
+                return Ok();
             }
-
-            return NoContent();
+            return NotFound(response.Message);
         }
     }
 }
