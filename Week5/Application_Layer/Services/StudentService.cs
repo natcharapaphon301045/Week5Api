@@ -42,7 +42,9 @@ namespace Week5.Application_Layer.Services
                 StudentName = s.StudentName,
                 StudentSurname = s.StudentSurname,
                 ProfessorID = s.ProfessorID,
+                //ProfessorName = s.Professor.ProfessorName,
                 MajorID = s.MajorID,
+                //MajorName = s.Major.MajorName,
                 /*StudentClass*/
                 /*BehaviorScore*/
             }).ToList();
@@ -62,7 +64,9 @@ namespace Week5.Application_Layer.Services
                 StudentName = student.StudentName,
                 StudentSurname = student.StudentSurname,
                 ProfessorID = student.ProfessorID,
+                //ProfessorName = student.Professor.ProfessorName,
                 MajorID = student.MajorID,
+                //MajorName = student.Major.MajorName,
             };
             return new ApiResponse<StudentDTO>(studentDTO);
         }

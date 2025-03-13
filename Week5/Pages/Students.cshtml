@@ -14,35 +14,78 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Professor</th>
-                <th>Major</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var student in Model.Students)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <td>@student.StudentName</td>
-                    <td>@student.StudentSurname</td>
-                    <td>@student.ProfessorID</td>
-                    <td>@student.MajorID</td>
-                    <td>
-                        <a asp-page="/EditStudent" asp-route-id="@student.StudentID" class="btn btn-primary">Edit</a>
-                        <button class="btn btn-danger" onclick="deleteStudent(@student.StudentID)">Delete</button>
-                    </td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Professor</th>
+                    <th>Major</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.Students)
+                {
+                    <tr>
+                        <td>@student.StudentID</td>
+                        <td>@student.StudentName</td>
+                        <td>@student.StudentSurname</td>
+                        <td>@student.ProfessorID</td>
+                        <td>@student.MajorID</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editStudent(@student.StudentID)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteStudent(@student.StudentID)">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 @section Scripts {
+    <script>
+        function editStudent(studentId) {
+            const newName = prompt("Enter new name:");
+            const newSurname = prompt("Enter new surname:");
+
+            if (!newName || !newSurname) {
+                alert("Name and Surname are required.");
+                return;
+            }
+
+            const data = {
+                studentName: newName,
+                studentSurname: newSurname
+            };
+
+            fetch(`/api/Student/${studentId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Student updated successfully.");
+                    location.reload();
+                } else {
+                    alert("Failed to update student.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
     <script>
         function deleteStudent(studentId) {
             if (confirm('Are you sure you want to delete this student?')) {

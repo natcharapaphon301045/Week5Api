@@ -57,16 +57,16 @@ namespace Week5.Api_Layer.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { success = false, message = "Invalid data" });
             }
 
             var response = await _studentService.UpdateStudentAsync(id, studentDTO);
             if (!response.Success)
             {
-                return NotFound(response.Message);
+                return NotFound(new { success = false, message = response.Message });
             }
 
-            return Ok(response);
+            return Ok(new { success = true, data = response.Data });
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
