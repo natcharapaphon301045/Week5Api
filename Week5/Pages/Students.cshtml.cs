@@ -12,7 +12,7 @@ public class StudentsModel : PageModel
         _studentService = studentService;
     }
 
-    public IEnumerable<StudentDTO> Students { get; set; } = new List<StudentDTO>();  // กำหนดค่าเริ่มต้น
+    public IEnumerable<StudentDTO> Students { get; set; } = new List<StudentDTO>();
 
     public async Task OnGetAsync()
     {
@@ -23,7 +23,7 @@ public class StudentsModel : PageModel
         }
         else
         {
-            Students = new List<StudentDTO>();  // หากไม่มีข้อมูลก็ให้เป็นค่าว่าง
+            Students = new List<StudentDTO>();
         }
     }
 
@@ -32,9 +32,19 @@ public class StudentsModel : PageModel
         var response = await _studentService.DeleteStudentAsync(id);
         if (response.Success)
         {
-            // เมื่อการลบสำเร็จ ให้ส่งผลลัพธ์แบบ JSON พร้อมค่าความสำเร็จ
             return new JsonResult(new { success = true });
         }
         return new JsonResult(new { success = false });
+    }
+
+    public async Task<IActionResult> OnGetStudentByIdAsync(int id)
+    {
+        var response = await _studentService.GetStudentByIdAsync(id);
+        if (response.Success)
+        {
+            Students = new List<StudentDTO> { response.Data };
+            return Page();
+        }
+        return NotFound();
     }
 }

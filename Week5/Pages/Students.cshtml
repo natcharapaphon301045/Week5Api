@@ -16,9 +16,9 @@
     </div>
 </div>
 
-@if (Model.Students == null)
+@if (Model.Students == null || !Model.Students.Any())
 {
-    <p><em>Loading...</em></p>
+    <p><em>No students found.</em></p>
 }
 else
 {
@@ -129,7 +129,94 @@ else
 
 @section Scripts {
     <script>
-        
-    </script>
+        function searchStudent() {
+            var studentId = document.getElementById('searchStudentId').value;
+            if (studentId) {
+                window.location.href = `/Students?handler=StudentById&id=${studentId}`;
+            } else {
+                alert('Please enter a student ID.');
+            }
+        }
 
+        function setEditStudent(studentId) {
+            document.getElementById('editStudentId').value = studentId;
+            // Fetch student details and set them in the form
+        }
+
+        function setDeleteStudent(studentId) {
+            document.getElementById('deleteStudentId').value = studentId;
+        }
+
+        function confirmDeleteStudent() {
+            var studentId = document.getElementById('deleteStudentId').value;
+            fetch(`/Students/Delete/${studentId}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete student.');
+                }
+            });
+        }
+
+        document.getElementById('createStudentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var name = document.getElementById('createStudentName').value;
+            var surname = document.getElementById('createStudentSurname').value;
+            // Add other fields as needed
+
+            var data = {
+                studentName: name,
+                studentSurname: surname
+                // Add other fields as needed
+            };
+
+            fetch('/api/Student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Student created successfully.');
+                    location.reload();
+                } else {
+                    alert('Failed to create student.');
+                }
+            }).catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('editStudentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var studentId = document.getElementById('editStudentId').value;
+            var name = document.getElementById('editStudentName').value;
+            var surname = document.getElementById('editStudentSurname').value;
+            // Add other fields as needed
+
+            var data = {
+                studentName: name,
+                studentSurname: surname
+                // Add other fields as needed
+            };
+
+            fetch(`/api/Student/${studentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Student updated successfully.');
+                    location.reload();
+                } else {
+                    alert('Failed to update student.');
+                }
+            }).catch(error => console.error('Error:', error));
+        });
+    </script>
 }
