@@ -6,6 +6,13 @@
 
 <div class="top-bar">
     <h1>Student List</h1>
+    <div>
+        <input type="text" id="searchStudentId" placeholder="Enter Student ID" />
+        <button class="btn btn-primary" onclick="searchStudent()">Search</button>
+        <button class="btn btn-success" onclick="goToCreateStudent()">
+            <i class="fas fa-plus"></i> Create Student
+        </button>
+    </div>
 </div>
 
 @if (Model.Students == null)
@@ -14,44 +21,61 @@
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped text-center align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Professor</th>
-                    <th>Major</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var student in Model.Students)
-                {
+    <div class="table-container">
+        @if (Model.Students == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@student.StudentID</td>
-                        <td>@student.StudentName</td>
-                        <td>@student.StudentSurname</td>
-                        <td>@student.ProfessorID</td>
-                        <td>@student.MajorID</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning" onclick="editStudent(@student.StudentID)">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteStudent(@student.StudentID)">
-                                <i class="fas fa-trash-alt"></i> Delete
-                            </button>
-                        </td>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Professor</th>
+                        <th>Major</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.Students)
+                    {
+                        <tr>
+                            <td>@student.StudentName</td>
+                            <td>@student.StudentSurname</td>
+                            <td>@student.ProfessorID</td>
+                            <td>@student.MajorID</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" onclick="editStudent(@student.StudentID)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteStudent(@student.StudentID)">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 }
-
 @section Scripts {
     <script>
+        function searchStudent() {
+            var studentId = document.getElementById('searchStudentId').value;
+            if (studentId) {
+                window.location.href = `/Students/Details/${studentId}`;
+            } else {
+                alert('Please enter a student ID.');
+            }
+        }
+
+        function goToCreateStudent() {
+            window.location.href = '/CreateStudent';
+        }
+
         function editStudent(studentId) {
             const newName = prompt("Enter new name:");
             const newSurname = prompt("Enter new surname:");
@@ -84,9 +108,7 @@ else
             })
             .catch(error => console.error("Error:", error));
         }
-    </script>
 
-    <script>
         function deleteStudent(studentId) {
             if (confirm('Are you sure you want to delete this student?')) {
                 fetch(`/Students/Delete/${studentId}`, {

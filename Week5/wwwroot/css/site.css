@@ -1,3 +1,29 @@
+.table {
+    width: 100%;
+    border-collapse: collapse; /* ทำให้เส้นขอบติดกัน */
+    margin-top: 20px;
+}
+
+    .table th, .table td {
+        border: 1px solid #ddd; /* เพิ่มเส้นขอบบางๆ */
+        padding: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        background-color: #f8f9fa; /* เปลี่ยนสีหัวข้อ */
+        font-weight: bold;
+    }
+
+.table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.btn {
+    width: 90px;
+}
+
 html {
   font-size: 14px;
 }
@@ -28,30 +54,4 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse; /* ทำให้เส้นขอบติดกัน */
-    margin-top: 20px;
-}
-
-    .table th, .table td {
-        border: 1px solid #ddd; /* เพิ่มเส้นขอบบางๆ */
-        padding: 12px;
-        text-align: center;
-    }
-
-    .table th {
-        background-color: #f8f9fa; /* เปลี่ยนสีหัวข้อ */
-        font-weight: bold;
-    }
-
-.table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.btn {
-    width: 90px;
 }
