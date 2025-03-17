@@ -45,7 +45,7 @@ app.UseAuthorization();
 // 🔹 Default Redirect to /Students
 app.MapGet("/", context =>
 {
-    context.Response.Redirect("/cat");
+    context.Response.Redirect("/students");
     return Task.CompletedTask;
 });
 
