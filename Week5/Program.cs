@@ -52,3 +52,4 @@ app.MapGet("/", context =>
 app.MapRazorPages();
 
 app.Run();
+//test change
