@@ -1,5 +1,6 @@
 ﻿@page
 @model StudentsModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Students";
@@ -59,54 +60,38 @@ else
 }
 
 <!-- Create Student Modal -->
-@await Html.PartialAsync("_CreateStudentModal")
-
-<!-- Edit Student Modal -->
-<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+<div class="modal fade" id="createStudentModal" tabindex="-1" aria-labelledby="createStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <h5 class="modal-title" id="createStudentModalLabel">Create Student</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editStudentForm">
-                    <input type="hidden" id="editStudentId">
+                <form id="createStudentForm" method="post" asp-page-handler="CreateStudent">
                     <div class="mb-3">
-                        <label for="editStudentName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editStudentName" required>
+                        <label for="StudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="StudentName" name="StudentDTO.StudentName" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editStudentSurname" class="form-label">Surname</label>
-                        <input type="text" class="form-control" id="editStudentSurname" required>
+                        <label for="StudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="StudentSurname" name="StudentDTO.StudentSurname" required>
                     </div>
-                    <!-- Add other fields as needed -->
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <div class="mb-3">
+                        <label for="ProfessorID" class="form-label">Professor ID</label>
+                        <input type="number" class="form-control" id="ProfessorID" name="StudentDTO.ProfessorID" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="MajorID" class="form-label">Major ID</label>
+                        <input type="number" class="form-control" id="MajorID" name="StudentDTO.MajorID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Delete Student Modal -->
-<div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this student?</p>
-                <input type="hidden" id="deleteStudentId">
-                <button type="button" class="btn btn-danger" onclick="confirmDeleteStudent()">Delete</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
         function searchStudent() {
@@ -117,88 +102,5 @@ else
                 alert('Please enter a student ID.');
             }
         }
-
-        function setEditStudent(studentId) {
-            document.getElementById('editStudentId').value = studentId;
-            // Fetch student details and set them in the form
-        }
-
-        function setDeleteStudent(studentId) {
-            document.getElementById('deleteStudentId').value = studentId;
-        }
-
-        function confirmDeleteStudent() {
-            var studentId = document.getElementById('deleteStudentId').value;
-            fetch(`/api/Student/${studentId}`, {
-                method: 'DELETE'
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    alert('Failed to delete student.');
-                }
-            });
-        }
-
-        document.getElementById('createStudentForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            var name = document.getElementById('createStudentName').value;
-            var surname = document.getElementById('createStudentSurname').value;
-            var professorId = document.getElementById('createProfessorId').value;
-            var majorId = document.getElementById('createMajorId').value;
-
-            var data = {
-                studentName: name,
-                studentSurname: surname,
-                professorID: professorId,
-                majorID: majorId
-            };
-
-            fetch('/api/Student', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert('Student created successfully.');
-                    location.reload();
-                } else {
-                    alert('Failed to create student.');
-                }
-            }).catch(error => console.error('Error:', error));
-        });
-
-        document.getElementById('editStudentForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            var studentId = document.getElementById('editStudentId').value;
-            var name = document.getElementById('editStudentName').value;
-            var surname = document.getElementById('editStudentSurname').value;
-            // Add other fields as needed
-
-            var data = {
-                studentName: name,
-                studentSurname: surname
-                // Add other fields as needed
-            };
-
-            fetch(`/api/Student/${studentId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert('Student updated successfully.');
-                    location.reload();
-                } else {
-                    alert('Failed to update student.');
-                }
-            }).catch(error => console.error('Error:', error));
-        });
     </script>
 }

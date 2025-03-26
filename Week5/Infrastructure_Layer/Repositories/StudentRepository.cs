@@ -14,21 +14,23 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             _context = context;
         }
+
         public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
             return await _context.Student
                 .AsNoTracking()
-                .Include(s => s.StudentClass)
+                .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
                 .ThenInclude(sc => sc.Class)
-                .Include(s => s.BehaviorScore)
+                .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
                 .ToListAsync();
         }
+
         public async Task<Student> GetStudentByIdAsync(int studentId)
         {
             var student = await _context.Student
-                .Include(s => s.StudentClass)
+                .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
                 .ThenInclude(sc => sc.Class)
-                .Include(s => s.BehaviorScore)
+                .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
                 .FirstOrDefaultAsync(s => s.StudentID == studentId);
 
             if (student == null)
@@ -36,19 +38,23 @@ namespace Week5.Infrastructure_Layer.Repositories
 
             return student;
         }
+
         public async Task<Professor?> GetProfessorByIdAsync(int professorId)
         {
             return await _context.Professor.FirstOrDefaultAsync(p => p.ProfessorID == professorId);
         }
+
         public async Task<Major?> GetMajorByIdAsync(int majorId)
         {
             return await _context.Major.FirstOrDefaultAsync(m => m.MajorID == majorId);
         }
+
         public async Task CreateStudentAsync(Student student)
         {
             await _context.Student.AddAsync(student);
             await _context.SaveChangesAsync();
         }
+
         public async Task<bool> UpdateStudentAsync(int studentId, StudentDTO studentDTO)
         {
             var student = await _context.Student.FindAsync(studentId);
@@ -64,13 +70,27 @@ namespace Week5.Infrastructure_Layer.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> DeleteStudentAsync(int studentId)
         {
             var student = await _context.Student.FindAsync(studentId);
             if (student == null)
                 return false;
 
-            _context.Student.Remove(student);
+            // Soft delete related StudentClass and BehaviorScore
+            var studentClasses = await _context.StudentClass.Where(sc => sc.StudentID == studentId).ToListAsync();
+            foreach (var studentClass in studentClasses)
+            {
+                studentClass.IsDeleted = true;
+            }
+
+            var behaviorScores = await _context.BehaviorScore.Where(bs => bs.StudentID == studentId).ToListAsync();
+            foreach (var behaviorScore in behaviorScores)
+            {
+                behaviorScore.IsDeleted = true;
+            }
+
+            _context.Student.Update(student);
             await _context.SaveChangesAsync();
             return true;
         }

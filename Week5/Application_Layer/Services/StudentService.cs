@@ -42,15 +42,12 @@ namespace Week5.Application_Layer.Services
                 StudentName = s.StudentName,
                 StudentSurname = s.StudentSurname,
                 ProfessorID = s.ProfessorID,
-                //ProfessorName = s.Professor.ProfessorName,
                 MajorID = s.MajorID,
-                //MajorName = s.Major.MajorName,
-                /*StudentClass*/
-                /*BehaviorScore*/
             }).ToList();
 
             return new ApiResponse<IEnumerable<StudentDTO>>(true, ResponseMessages.StudentGetSuccess, studentDTOs);
         }
+
         public async Task<ApiResponse<StudentDTO>> GetStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.GetStudentByIdAsync(studentId);
@@ -63,14 +60,11 @@ namespace Week5.Application_Layer.Services
                 StudentName = student.StudentName,
                 StudentSurname = student.StudentSurname,
                 ProfessorID = student.ProfessorID,
-                //ProfessorName = student.Professor.ProfessorName,
                 MajorID = student.MajorID,
-                //MajorName = student.Major.MajorName,
             };
 
             return new ApiResponse<StudentDTO>(true, ResponseMessages.StudentGetSuccess, studentDTO);
         }
-
 
         public async Task<ApiResponse<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO)
         {
@@ -81,8 +75,8 @@ namespace Week5.Application_Layer.Services
             {
                 var emptyStudent = new StudentDTO
                 {
-                    StudentName = string.Empty,  // หรือใช้ค่าอื่นที่เหมาะสม
-                    StudentSurname = string.Empty // หรือใช้ค่าอื่นที่เหมาะสม
+                    StudentName = string.Empty,
+                    StudentSurname = string.Empty
                 };
                 return new ApiResponse<StudentDTO>(false, ResponseMessages.ProfessorNotFound, emptyStudent);
             }
@@ -91,8 +85,8 @@ namespace Week5.Application_Layer.Services
             {
                 var emptyStudent = new StudentDTO
                 {
-                    StudentName = string.Empty,  // หรือใช้ค่าอื่นที่เหมาะสม
-                    StudentSurname = string.Empty // หรือใช้ค่าอื่นที่เหมาะสม
+                    StudentName = string.Empty,
+                    StudentSurname = string.Empty
                 };
                 return new ApiResponse<StudentDTO>(false, ResponseMessages.MajorNotFound, emptyStudent);
             }
@@ -156,16 +150,16 @@ namespace Week5.Application_Layer.Services
             var updatedStudent = await _studentRepository.GetStudentByIdAsync(studentId);
             return new ApiResponse<Student>(true, ResponseMessages.StudentUpdateSuccess, updatedStudent);
         }
-        public async Task<ApiResponse<bool>> DeleteStudentAsync(int studentId)
-    {
-        var result = await _studentRepository.DeleteStudentAsync(studentId);
-        if (!result)
-        {
-            return new ApiResponse<bool>("Student not found or already deleted");
-        }
 
-        return new ApiResponse<bool>(true);
-    }
-    
+        public async Task<ApiResponse<bool>> DeleteStudentAsync(int studentId)
+        {
+            var result = await _studentRepository.DeleteStudentAsync(studentId);
+            if (!result)
+            {
+                return new ApiResponse<bool>("Student not found or already deleted");
+            }
+
+            return new ApiResponse<bool>(true);
+        }
     }
 }

@@ -8,6 +8,6 @@
 
         public required Student Student { get; set; }
 
-
+        public bool IsDeleted { get; set; } = false; // Soft Delete
     }
 }

@@ -10,7 +10,6 @@ namespace Week5.Api_Layer.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
-
         public StudentController(IStudentService studentService)
         {
             _studentService = studentService;
@@ -48,9 +47,7 @@ namespace Week5.Api_Layer.Controllers
             {
                 return BadRequest(new { status = "error", message = "Student not created" });
             }
-
             return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
-
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
@@ -59,13 +56,11 @@ namespace Week5.Api_Layer.Controllers
             {
                 return BadRequest(new { success = false, message = "Invalid data" });
             }
-
             var response = await _studentService.UpdateStudentAsync(id, studentDTO);
             if (!response.Success)
             {
                 return NotFound(new { success = false, message = response.Message });
             }
-
             return Ok(new { success = true, data = response.Data });
         }
         [HttpDelete("{id}")]
@@ -80,3 +75,4 @@ namespace Week5.Api_Layer.Controllers
         }
     }
 }
+

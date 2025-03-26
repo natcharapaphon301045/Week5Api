@@ -1,17 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
 using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.Services;
-
 using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Persistence;
 using Week5.Infrastructure_Layer.Repositories;
-
-using Week5.Application_Layer.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
