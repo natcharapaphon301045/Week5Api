@@ -37,7 +37,6 @@ public class StudentsModel : PageModel
         }
         return NotFound();
     }
-
     public async Task<IActionResult> OnPost(StudentDTO studentDTO)
     {
         var response = await _studentService.CreateStudentAsync(studentDTO);
@@ -47,4 +46,15 @@ public class StudentsModel : PageModel
         }
         return Page();
     }
+
+    public async Task<IActionResult> OnPostUpdateStudentAsync(StudentDTO studentDTO)
+    {
+        var response = await _studentService.UpdateStudentAsync(studentDTO.StudentID, studentDTO);
+        if (response.Success)
+        {
+            return RedirectToPage();
+        }
+        return Page();
+    }
+
 }

@@ -92,6 +92,43 @@ else
         </div>
     </div>
 </div>
+<!-- Edit Student Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm" method="post" asp-page-handler="UpdateStudent">
+                    <input type="hidden" id="EditStudentID" name="StudentDTO.StudentID" />
+                    <div class="mb-3">
+                        <label for="StudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="StudentName" name="StudentDTO.StudentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="StudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="StudentSurname" name="StudentDTO.StudentSurname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ProfessorID" class="form-label">Professor ID</label>
+                        <input type="number" class="form-control" id="ProfessorID" name="StudentDTO.ProfessorID" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="MajorID" class="form-label">Major ID</label>
+                        <input type="number" class="form-control" id="MajorID" name="StudentDTO.MajorID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @section Scripts {
     <script>
         function searchStudent() {
@@ -101,6 +138,10 @@ else
             } else {
                 alert('Please enter a student ID.');
             }
+        }
+        function setEditStudent(studentId) {
+            document.getElementById('editStudentId').value = studentId;
+            // Fetch student details and set them in the form
         }
     </script>
 }
