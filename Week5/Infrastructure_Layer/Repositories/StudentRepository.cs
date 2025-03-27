@@ -87,13 +87,11 @@ namespace Week5.Infrastructure_Layer.Repositories
             {
                 studentClass.IsDeleted = true;
             }
-
             var behaviorScores = await _context.BehaviorScore.Where(bs => bs.StudentID == studentId).ToListAsync();
             foreach (var behaviorScore in behaviorScores)
             {
                 behaviorScore.IsDeleted = true;
             }
-
             _context.Student.Update(student);
             await _context.SaveChangesAsync();
             return true;
