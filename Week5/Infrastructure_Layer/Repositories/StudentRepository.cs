@@ -2,6 +2,7 @@
 using Week5.Domain_Layer.IRepositories;
 using Week5.Infrastructure_Layer.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Week5.Application_Layer.DTOs;
 
 namespace Week5.Infrastructure_Layer.Repositories
 {
@@ -14,20 +15,32 @@ namespace Week5.Infrastructure_Layer.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Student>> GetAllAsync()
+        public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
-            return await _context.Student.ToListAsync(); // ให้แน่ใจว่า DbSet ชื่อ "Students"
+            return await _context.Student
+                .AsNoTracking()
+                .Where(s => !s.IsDeleted)
+                .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
+                .ThenInclude(sc => sc.Class)
+                .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
+                .ToListAsync();
         }
 
-        public async Task<Student> GetByIdAsync(int studentId)
+        public async Task<Student> GetStudentByIdAsync(int studentId)
         {
-            var student = await _context.Student.FindAsync(studentId);
+            var student = await _context.Student
+                .Where(s => !s.IsDeleted)
+                .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
+                .ThenInclude(sc => sc.Class)
+                .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
+                .FirstOrDefaultAsync(s => s.StudentID == studentId);
+
             if (student == null)
                 throw new KeyNotFoundException($"Student with ID {studentId} not found.");
 
             return student;
-
         }
+
         public async Task<Professor?> GetProfessorByIdAsync(int professorId)
         {
             return await _context.Professor.FirstOrDefaultAsync(p => p.ProfessorID == professorId);
@@ -38,21 +51,53 @@ namespace Week5.Infrastructure_Layer.Repositories
             return await _context.Major.FirstOrDefaultAsync(m => m.MajorID == majorId);
         }
 
-
         public async Task CreateStudentAsync(Student student)
         {
             await _context.Student.AddAsync(student);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public async Task<bool> UpdateStudentAsync(int studentId, StudentDTO studentDTO)
         {
-            return await _context.SaveChangesAsync() > 0; 
+            var student = await _context.Student
+                .Include(s => s.StudentClass)
+                .Include(s => s.BehaviorScore)
+                .FirstOrDefaultAsync(s => s.StudentID == studentId);
+
+            if (student == null)
+                return false;
+
+            student.StudentName = studentDTO.StudentName;
+            student.StudentSurname = studentDTO.StudentSurname;
+            student.ProfessorID = studentDTO.ProfessorID;
+            student.MajorID = studentDTO.MajorID;
+
+            _context.Student.Update(student);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task<bool> SaveChangeAsync()
+        public async Task<bool> DeleteStudentAsync(int studentId)
         {
-            throw new NotImplementedException();
+            var student = await _context.Student.FindAsync(studentId);
+            if (student == null)
+                return false;
+
+            // Soft delete related StudentClass and BehaviorScore
+            var studentClasses = await _context.StudentClass.Where(sc => sc.StudentID == studentId).ToListAsync();
+            foreach (var studentClass in studentClasses)
+            {
+                studentClass.IsDeleted = true;
+            }
+            var behaviorScores = await _context.BehaviorScore.Where(bs => bs.StudentID == studentId).ToListAsync();
+            foreach (var behaviorScore in behaviorScores)
+            {
+                behaviorScore.IsDeleted = true;
+            }
+            var isDeleted = student.IsDeleted = true;
+            _context.Student.Update(student);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
-
 }

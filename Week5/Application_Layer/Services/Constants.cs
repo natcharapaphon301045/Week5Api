@@ -1,4 +1,6 @@
-﻿namespace Week5.Application_Layer.Services
+﻿using Week5.Application_Layer.DTOs;
+
+namespace Week5.Application_Layer.Services
 {
     public static class ResponseMessages
     {   
@@ -10,11 +12,9 @@
         public const string ProfessorGetSuccess = "Professor Get Success";
         public const string MajorNotFound = "Major not found";
         public const string MajorGetSuccess = "Major Get Success";
-    }
-    public class ApiResponse<T>
-    {
-        public bool Success { get; set; }
-        public required string Message { get; set; }
-        public T? Data { get; set; }
+        public const string ClassNotFound = "Class not found";
+        public const string StudentClassGetSuccess = "Student-Class relation retrieved successfully";
+        public const string StudentClassNotFound = "Student-Class relation not found";
+        public const string StudentUpdateSuccess = "Student Update Success";
     }
 }

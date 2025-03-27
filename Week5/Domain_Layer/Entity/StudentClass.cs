@@ -7,5 +7,6 @@
 
         public int ClassID { get; set; }
         public required Class Class { get; set; }
+        public bool IsDeleted { get; set; } = false; // Soft Delete
     }
 }

@@ -1,39 +1,38 @@
-﻿using Week5.Application_Layer.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Week5.Application_Layer.Interfaces;
 using Week5.Application_Layer.DTOs;
-using Week5.Domain_Layer.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Week5.Api_Layer.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class StudentController: ControllerBase
+    [ApiController]
+    public class StudentController : ControllerBase
     {
-        private readonly IStudentService.IStudentGetService _studentGetService;
-        private readonly IStudentService.IStudentPostService _studentPostService;
-
-        public StudentController(IStudentService.IStudentGetService studentGetService,
-                                    IStudentService.IStudentPostService studentPostService)
+        private readonly IStudentService _studentService;
+        public StudentController(IStudentService studentService)
         {
-            _studentGetService = studentGetService;
-            _studentPostService = studentPostService;
+            _studentService = studentService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = await _studentGetService.GetAllStudentsAsync();
-            return Ok(students);
+            var response = await _studentService.GetAllStudentsAsync();
+            if (response.Success)
+            {
+                return Ok(response.Data);
+            }
+            return NotFound(response.Message);
         }
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetStudentById(int studentId)
+        public async Task<IActionResult> GetStudentById(int id)
         {
-            var student = await _studentGetService.GetStudentByIdAsync(studentId);
-            if (student == null) throw new KeyNotFoundException($"Student with ID {studentId} not found.");
-            return Ok(student);
-        }
+            var response = await _studentService.GetStudentByIdAsync(id);
+            if (response == null)
+                return NotFound(new { status = "error", message = $"Student with ID {id} not found." });
 
+            return Ok(response.Data);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateStudent([FromBody] StudentDTO createDto)
         {
@@ -42,25 +41,38 @@ namespace Week5.Api_Layer.Controllers
                 return BadRequest(new { status = "error", message = "Invalid data" });
             }
 
-            var result = await _studentPostService.CreateStudentAsync(createDto);
+            var result = await _studentService.CreateStudentAsync(createDto);
 
             if (result?.Data == null)
             {
                 return BadRequest(new { status = "error", message = "Student not created" });
             }
-
-            return CreatedAtAction(nameof(GetStudentById), new { id = result.Data.StudentID },
-                new { status = "success", message = "Student created" });
+            return CreatedAtAction("GetStudentById", new { id = result.Data.StudentID }, result.Data);
         }
-
-
-        [HttpPost("initialize")]
-        public async Task<IActionResult> InitializeStudentData()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
+        {
+            if (!ModelState.IsValid)
             {
-                var result = await _studentPostService.InitializeStudentDataAsync();
-                if (!result.Success) return BadRequest(result.Message);
-                return Ok(result.Message);
+                return BadRequest(new { success = false, message = "Invalid data" });
             }
-        
+            var response = await _studentService.UpdateStudentAsync(id, studentDTO);
+            if (!response.Success)
+            {
+                return NotFound(new { success = false, message = response.Message });
+            }
+            return Ok(new { success = true, data = response.Data });
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var response = await _studentService.DeleteStudentAsync(id);
+            if (response.Success)
+            {
+                return Ok();
+            }
+            return NotFound(response.Message);
+        }
     }
 }
+
