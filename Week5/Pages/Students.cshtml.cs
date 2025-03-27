@@ -37,29 +37,38 @@ public class StudentsModel : PageModel
         }
         return NotFound();
     }
-    public async Task<IActionResult> OnPostCreateAsync(StudentDTO studentDTO)
+
+    public async Task<IActionResult> OnPostCreateStudentAsync(StudentDTO studentDTO)
     {
         var response = await _studentService.CreateStudentAsync(studentDTO);
         if (response.Success)
+        {
             return RedirectToPage();
+        }
+        ModelState.AddModelError(string.Empty, response.Message);
         return Page();
     }
-    public async Task<IActionResult> OnPostEdit(StudentDTO studentDTO)
+
+    public async Task<IActionResult> OnPostUpdateStudentAsync(StudentDTO studentDTO)
     {
         var response = await _studentService.UpdateStudentAsync(studentDTO.StudentID, studentDTO);
         if (response.Success)
         {
             return RedirectToPage();
         }
-         return Page();
+        ModelState.AddModelError(string.Empty, response.Message);
+        return Page();
     }
-    public async Task<IActionResult> OnDelete(int studentId)
+
+    public async Task<IActionResult> OnPostDeleteStudentAsync(int studentId)
     {
         var response = await _studentService.DeleteStudentAsync(studentId);
         if (response.Success)
         {
             return RedirectToPage();
         }
+        ModelState.AddModelError(string.Empty, response.Message);
         return Page();
     }
 }
+

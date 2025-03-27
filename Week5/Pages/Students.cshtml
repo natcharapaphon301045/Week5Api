@@ -68,7 +68,7 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="PostStudentAsync" asp-page-handler="create">
+                <form method="post" asp-page-handler="CreateStudent">
                     <div class="mb-3">
                         <label for="StudentName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="StudentName" name="StudentDTO.StudentName" required>
@@ -92,6 +92,7 @@ else
         </div>
     </div>
 </div>
+
 <!-- Edit Student Modal -->
 <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -101,28 +102,23 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-                <form method="PostEdit" asp-page-handler="Edit">
-                    <input type="hidden" id="EditStudentID" name="StudentDTO.StudentID" />
+                <form method="post" asp-page-handler="UpdateStudent">
+                    <input type="hidden" id="editStudentId" name="StudentDTO.StudentID" />
                     <div class="mb-3">
-                        <label for="StudentID" class="form-label">ID</label>
-                        <input type="text" class="form-control" id="StudentID" name="StudentDTO.StudentID" required>
+                        <label for="editStudentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editStudentName" name="StudentDTO.StudentName" required>
                     </div>
                     <div class="mb-3">
-                        <label for="StudentName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="StudentName" name="StudentDTO.StudentName" required>
+                        <label for="editStudentSurname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="editStudentSurname" name="StudentDTO.StudentSurname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="StudentSurname" class="form-label">Surname</label>
-                        <input type="text" class="form-control" id="StudentSurname" name="StudentDTO.StudentSurname" required>
+                        <label for="editProfessorId" class="form-label">Professor ID</label>
+                        <input type="number" class="form-control" id="editProfessorId" name="StudentDTO.ProfessorID" required>
                     </div>
                     <div class="mb-3">
-                        <label for="ProfessorID" class="form-label">Professor ID</label>
-                        <input type="number" class="form-control" id="ProfessorID" name="StudentDTO.ProfessorID" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="MajorID" class="form-label">Major ID</label>
-                        <input type="number" class="form-control" id="MajorID" name="StudentDTO.MajorID" required>
+                        <label for="editMajorId" class="form-label">Major ID</label>
+                        <input type="number" class="form-control" id="editMajorId" name="StudentDTO.MajorID" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -150,7 +146,6 @@ else
     </div>
 </div>
 
-
 @section Scripts {
     <script>
         function searchStudent() {
@@ -161,6 +156,28 @@ else
                 alert('Please enter a student ID.');
             }
         }
-        
+
+        function setEditStudent(studentId) {
+            document.getElementById('editStudentId').value = studentId;
+            // Fetch student details and set them in the form
+        }
+
+        function setDeleteStudent(studentId) {
+            document.getElementById('deleteStudentId').value = studentId;
+        }
+
+        function confirmDeleteStudent() {
+            var studentId = document.getElementById('deleteStudentId').value;
+            fetch(`/Students?handler=DeleteStudent&studentId=${studentId}`, {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete student.');
+                }
+            });
+        }
     </script>
 }
+
