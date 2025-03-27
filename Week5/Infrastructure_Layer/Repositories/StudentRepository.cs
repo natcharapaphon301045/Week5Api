@@ -70,46 +70,6 @@ namespace Week5.Infrastructure_Layer.Repositories
             student.ProfessorID = studentDTO.ProfessorID;
             student.MajorID = studentDTO.MajorID;
 
-            // Update StudentClass and BehaviorScore if provided
-            if (studentDTO.StudentClass != null)
-            {
-                foreach (var sc in student.StudentClass)
-                {
-                    sc.IsDeleted = true;
-                }
-
-                foreach (var scDTO in studentDTO.StudentClass)
-                {
-                    var classEntity = await _context.Class.FindAsync(scDTO.ClassID);
-                    if (classEntity != null)
-                    {
-                        student.StudentClass.Add(new StudentClass
-                        {
-                            ClassID = scDTO.ClassID,
-                            Class = classEntity,
-                            Student = student
-                        });
-                    }
-                }
-            }
-
-            if (studentDTO.BehaviorScore != null)
-            {
-                foreach (var bs in student.BehaviorScore)
-                {
-                    bs.IsDeleted = true;
-                }
-
-                foreach (var bsDTO in studentDTO.BehaviorScore)
-                {
-                    student.BehaviorScore.Add(new BehaviorScore
-                    {
-                        Score = bsDTO.Score,
-                        Student = student
-                    });
-                }
-            }
-
             _context.Student.Update(student);
             await _context.SaveChangesAsync();
             return true;
