@@ -19,6 +19,7 @@ namespace Week5.Infrastructure_Layer.Repositories
         {
             return await _context.Student
                 .AsNoTracking()
+                .Where(s => !s.IsDeleted)
                 .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
                 .ThenInclude(sc => sc.Class)
                 .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
@@ -28,6 +29,7 @@ namespace Week5.Infrastructure_Layer.Repositories
         public async Task<Student> GetStudentByIdAsync(int studentId)
         {
             var student = await _context.Student
+                .Where(s => !s.IsDeleted)
                 .Include(s => s.StudentClass.Where(sc => !sc.IsDeleted))
                 .ThenInclude(sc => sc.Class)
                 .Include(s => s.BehaviorScore.Where(bs => !bs.IsDeleted))
@@ -92,6 +94,7 @@ namespace Week5.Infrastructure_Layer.Repositories
             {
                 behaviorScore.IsDeleted = true;
             }
+            var isDeleted = student.IsDeleted = true;
             _context.Student.Update(student);
             await _context.SaveChangesAsync();
             return true;

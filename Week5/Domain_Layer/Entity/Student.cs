@@ -6,6 +6,8 @@
         public required string StudentName { get; set; }
         public required string StudentSurname { get; set; }
 
+        public bool IsDeleted { get; set; }
+        
         public int ProfessorID { get; set; }
         public required Professor Professor { get; set; }
 

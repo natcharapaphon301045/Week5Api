@@ -14,6 +14,7 @@ namespace Week5.Application_Layer.DTOs
         public int MajorID { get; set; }
         //public string? MajorName { get; set; }
 
+        public bool IsDeleted { get; set; }
         public List<StudentClass>? StudentClass { get; set; }
         public List<BehaviorScore>? BehaviorScore { get; set; }
     }
