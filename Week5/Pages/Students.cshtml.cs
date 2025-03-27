@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Week5.Application_Layer.DTOs;
 using Week5.Application_Layer.Interfaces;
+using Week5.Domain_Layer.Entity;
 
 public class StudentsModel : PageModel
 {
@@ -37,7 +38,6 @@ public class StudentsModel : PageModel
         }
         return NotFound();
     }
-
     public async Task<IActionResult> OnPostCreateStudentAsync(StudentDTO studentDTO)
     {
         var response = await _studentService.CreateStudentAsync(studentDTO);
@@ -59,10 +59,14 @@ public class StudentsModel : PageModel
         ModelState.AddModelError(string.Empty, response.Message);
         return Page();
     }
-
-    public async Task<IActionResult> OnPostDeleteStudentAsync(int studentId)
+    public void OnPostOnClick()
     {
-        var response = await _studentService.DeleteStudentAsync(studentId);
+    }
+
+    public async Task<IActionResult> OnPostDeleteStudentAsync(string studentId)
+    {
+        var x = int.Parse(studentId);
+        var response = await _studentService.DeleteStudentAsync(x);
         if (response.Success)
         {
             return RedirectToPage();
@@ -70,5 +74,6 @@ public class StudentsModel : PageModel
         ModelState.AddModelError(string.Empty, response.Message);
         return Page();
     }
+
 }
 
